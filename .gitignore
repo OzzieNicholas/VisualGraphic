@@ -31,5 +31,4 @@
 *.out
 *.app
 /.vs
-/CGVisual/x64
-/x64
+
