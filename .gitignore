@@ -32,3 +32,8 @@
 *.app
 /.vs
 
+/VisualGraphic/x64
+*.user
+*.filters
+*.vcxproj
+*.pdb
