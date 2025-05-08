@@ -21,13 +21,13 @@ BasicAxis::~BasicAxis()
 void BasicAxis::initializeGL()
 {
     initializeOpenGLFunctions();
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+    glClearColor(0.1f, 0.2f, 0.25f, 1.0f);
     glEnable(GL_DEPTH_TEST);
 
     // 创建着色器程序
     shaderProgram = new QOpenGLShaderProgram(this);
-    shaderProgram->addShaderFromSourceCode(QOpenGLShader::Vertex, vertexShader);
-    shaderProgram->addShaderFromSourceCode(QOpenGLShader::Fragment, fragmentShader);
+    shaderProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/axis.vert");
+    shaderProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/axis.frag");
     shaderProgram->link();
 
     // 顶点数据：每个轴两个顶点（起点和终点）
@@ -97,7 +97,7 @@ void BasicAxis::paintGL()
     shaderProgram->setUniformValue("mvp", mvp);
 
     vao.bind();
-    glDrawArrays(GL_LINES, 0, 6); // 6个顶点（3条线）
+    glDrawArrays(GL_LINES, 0, 6);
     vao.release();
 
     shaderProgram->release();
