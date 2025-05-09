@@ -26,9 +26,13 @@ protected:
 	void wheelEvent(QWheelEvent* event) override;
 
 private:
-    QOpenGLShaderProgram* shaderProgram = nullptr;
     QOpenGLVertexArrayObject vao;
     QOpenGLBuffer vbo;
+    QOpenGLShaderProgram* shaderProgram = nullptr;
+
+	QOpenGLVertexArrayObject coneArrowVao;
+	QOpenGLBuffer coneArrowVbo;
+	int coneArrowVertexCount = 0;
 
     QPoint lastMousePos;
 
@@ -38,4 +42,5 @@ private:
     float rotationX = 45.0f;
     float rotationY = -45.0f;
 	
+    std::vector<float> generateConeArrow(float radius, float height, int segments);
 };
