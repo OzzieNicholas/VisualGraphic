@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props')" />
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
@@ -71,7 +72,7 @@
       <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <Link>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
@@ -98,16 +99,40 @@
     <ResourceCompile Include="resource\VisualGraphic.rc" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="include\Basic\BasicAxis.h" />
+    <ClCompile Include="include\Renderer\TriMeshRenderer.h" />
+    <ClCompile Include="src\Widgets\SceneViewport.cpp" />
+    <ClCompile Include="src\Geometry\TriMesh.cpp" />
+    <ClCompile Include="src\Geometry\TriMeshBuilder.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Renderer\TriMeshRenderer.cpp" />
+    <ClCompile Include="src\Widgets\BasicAxis.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Basic\BasicAxis.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <QtMoc Include="include\Widgets\BasicAxis.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\Geometry\TriMesh.h" />
+    <ClInclude Include="include\Geometry\TriMeshBuilder.h" />
+    <ClInclude Include="include\Geometry\TriVertex.h" />
+    <QtMoc Include="include\Widgets\SceneViewport.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="shaders\tri_mesh.frag" />
+    <None Include="shaders\tri_mesh.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />
   </ImportGroup>
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets" Condition="Exists('packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.props'))" />
+    <Error Condition="!Exists('packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Windows.CppWinRT.2.0.220531.1\build\native\Microsoft.Windows.CppWinRT.targets'))" />
+  </Target>
 </Project>

@@ -1,4 +1,4 @@
-#include "../../include/Basic/BasicAxis.h"
+#include "../../include/Widgets/BasicAxis.h"
 
 BasicAxis::BasicAxis(QWidget* parent)
     : QOpenGLWidget(parent) {
@@ -75,6 +75,19 @@ void BasicAxis::initializeGL() {
 	glEnableVertexAttribArray(0);
 	// 未绑定 attribute 1，颜色将在绘制时使用 glVertexAttrib3f 设置常量颜色
 	coneArrowVao.release();
+
+    // TriMesh
+    // 1. 创建 shader program
+    triMeshShader = new QOpenGLShaderProgram(this);
+    triMeshShader->addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/tri_mesh.vert");
+    triMeshShader->addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/tri_mesh.frag");
+    if (!triMeshShader->link()) {
+        qDebug() << "TriMesh shader link error:" << triMeshShader->log();
+    }
+    // 2. 构建三角网格（例如 20x20）
+    triMesh = TriMeshBuilder::createGrid(20, 20, 10.0f);
+    // 3. 设置到渲染器
+    triMeshRenderer.setMesh(triMesh);
 }
 
 void BasicAxis::resizeGL(int w, int h) {
@@ -109,7 +122,7 @@ void BasicAxis::paintGL() {
 	// x轴箭头
 	model.setToIdentity();
 	model.translate(5.0f, 0.0f, 0.0f);
-	model.rotate(rotationX, 1.0f, 0.0f, 0.0f);
+	model.rotate(90.0f, 0.0f, 1.0f, 0.0f);
 	mvp = projection * view * model;
 	shaderProgram->setUniformValue("mvp", mvp);
 	glVertexAttrib3f(1, 1.0f, 0.0f, 0.0f);
@@ -117,7 +130,7 @@ void BasicAxis::paintGL() {
 	// y轴箭头
 	model.setToIdentity();
 	model.translate(0.0f, 5.0f, 0.0f);
-	model.rotate(rotationX, 1.0f, 0.0f, 0.0f);
+	model.rotate(-90.0f, 1.0f, 0.0f, 0.0f);
 	mvp = projection * view * model;
 	shaderProgram->setUniformValue("mvp", mvp);
 	glVertexAttrib3f(1, 0.0f, 1.0f, 0.0f);
@@ -132,10 +145,35 @@ void BasicAxis::paintGL() {
 	coneArrowVao.release();
 
     shaderProgram->release();
+
+    // TriMesh
+    if (triMeshShader) {
+        QMatrix4x4 projection;
+        projection.perspective(45.0f, width() / float(height()), 0.1f, 100.0f);
+
+        QMatrix4x4 view;
+        view.translate(panX, panY, -zoom);
+        view.rotate(rotationX, 1.0f, 0.0f);
+        view.rotate(rotationY, 0.0f, 1.0f);
+
+        QMatrix4x4 model;
+        model.setToIdentity();
+
+        QMatrix4x4 mvp = projection * view * model;
+
+        triMeshShader->bind();
+        triMeshShader->setUniformValue("mvp", mvp);
+        triMeshRenderer.drawMesh(triMeshShader);
+        triMeshShader->release();
+    }
 }
 
 void BasicAxis::mousePressEvent(QMouseEvent* event) {
 	lastMousePos = event->pos();
+    if (event->button() == Qt::MiddleButton) {  // 或改为 Ctrl+左键
+        QVector3D worldCoord = mapClickToPlane(event->position().x(), event->position().y());
+        qDebug() << "Clicked 3D Coord (Z=0 Plane):" << worldCoord;
+    }
 }
 
 void BasicAxis::mouseMoveEvent(QMouseEvent* event) {
@@ -182,4 +220,45 @@ std::vector<float> BasicAxis::generateConeArrow(float radius, float height, int 
     }
 
 	return vertices;
+}
+
+QVector3D BasicAxis::mapClickToPlane(float screenX, float screenY) {
+    // 1. 屏幕坐标 → NDC
+    float ndcX = (2.0f * screenX) / width() - 1.0f;
+    float ndcY = 1.0f - (2.0f * screenY) / height();
+
+    QVector4D nearPointNDC(ndcX, ndcY, -1.0f, 1.0f); // 近平面
+    QVector4D farPointNDC(ndcX, ndcY, 1.0f, 1.0f);   // 远平面
+
+    // 2. 构造与 paintGL 一致的投影视图矩阵
+    QMatrix4x4 projection;
+    projection.perspective(45.0f, width() / float(height()), 0.1f, 100.0f);
+
+    QMatrix4x4 view;
+    view.translate(panX, panY, -zoom);
+    view.rotate(rotationX, 1.0f, 0.0f);
+    view.rotate(rotationY, 0.0f, 1.0f);
+
+    QMatrix4x4 invPV = (projection * view).inverted();
+
+    // 3. 将 NDC 转换为世界坐标
+    QVector4D nearWorld = invPV * nearPointNDC;
+    QVector4D farWorld = invPV * farPointNDC;
+    nearWorld /= nearWorld.w();
+    farWorld /= farWorld.w();
+
+    QVector3D rayOrigin = nearWorld.toVector3D();
+    QVector3D rayDir = (farWorld - nearWorld).toVector3D().normalized();
+
+    // 4. 与 Z=0 平面求交
+    if (qAbs(rayDir.z()) < 1e-6f) {
+        // 射线与平面平行
+        return QVector3D(std::numeric_limits<float>::quiet_NaN(),
+            std::numeric_limits<float>::quiet_NaN(),
+            std::numeric_limits<float>::quiet_NaN());
+    }
+
+    float t = -rayOrigin.z() / rayDir.z();
+    QVector3D intersection = rayOrigin + t * rayDir;
+    return intersection;
 }

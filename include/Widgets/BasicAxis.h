@@ -8,6 +8,10 @@
 
 #include <QMouseEvent>
 
+#include "../../include/Geometry/TriMesh.h"
+#include "../../include/Geometry/TriMeshBuilder.h"
+#include "../../include/Renderer/TriMeshRenderer.h"
+
 class BasicAxis : public QOpenGLWidget, protected QOpenGLFunctions
 {
     Q_OBJECT
@@ -26,6 +30,10 @@ protected:
 	void wheelEvent(QWheelEvent* event) override;
 
 private:
+    TriMesh triMesh;
+    TriMeshRenderer triMeshRenderer;
+    QOpenGLShaderProgram* triMeshShader = nullptr;
+
     QOpenGLVertexArrayObject vao;
     QOpenGLBuffer vbo;
     QOpenGLShaderProgram* shaderProgram = nullptr;
@@ -43,4 +51,6 @@ private:
     float rotationY = -45.0f;
 	
     std::vector<float> generateConeArrow(float radius, float height, int segments);
+
+    QVector3D mapClickToPlane(float screenX, float screenY);
 };

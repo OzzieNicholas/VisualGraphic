@@ -39,3 +39,4 @@
 # User-specific files
 *.user
 *.pdb
+/packages
