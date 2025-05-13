@@ -46,6 +46,7 @@ TriMesh TriMeshBuilder::createAxisLines(float length) {
         {{0, 0, 0}, {}, {0, 0, 1}}, {{0, 0, L}, {}, {0, 0, 1}}  // Z - À¶
     };
     mesh.indices = { 0, 1, 2, 3, 4, 5 };
+	mesh.primitiveType = GL_LINES;
     return mesh;
 }
 

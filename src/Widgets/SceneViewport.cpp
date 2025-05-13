@@ -77,7 +77,7 @@ void SceneViewport::mouseMoveEvent(QMouseEvent* event) {
     int dx = int(event->position().x() - lastMousePos.x());
     int dy = int(event->position().y() - lastMousePos.y());
 
-    if (event->buttons() & Qt::LeftButton) {
+    if (event->buttons() & Qt::MiddleButton) {
         rotationX += dy * 0.5f;
         rotationY += dx * 0.5f;
     }

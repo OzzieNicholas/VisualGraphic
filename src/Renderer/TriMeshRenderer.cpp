@@ -46,14 +46,16 @@ void TriMeshRenderer::setMesh(const TriMesh& mesh) {
     ebo.release();
 
     indexCount = int(mesh.indices.size());
+	drawMode = mesh.primitiveType;
 }
 
 void TriMeshRenderer::drawMesh(QOpenGLShaderProgram* program) {
-    if (!initialized || indexCount == 0) return;
-
+    if (!initialized || indexCount == 0) {
+        return;
+    }
     program->bind();
     vao.bind();
-    glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+    glDrawElements(drawMode, indexCount, GL_UNSIGNED_INT, nullptr);
     vao.release();
     program->release();
 }

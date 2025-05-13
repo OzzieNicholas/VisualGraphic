@@ -34,9 +34,9 @@ private:
     TriMeshRenderer renderer;
     QOpenGLShaderProgram* shader = nullptr;
 
-    float rotationX = 30.0f;
+    float rotationX = 45.0f;
     float rotationY = -45.0f;
-    float zoom = 25.0f;
+    float zoom = 20.0f;
     float panX = 0.0f;
     float panY = 0.0f;
     QPoint lastMousePos;

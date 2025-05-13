@@ -4,12 +4,13 @@
 #pragma once
 
 #include "./TriVertex.h"
-#include <vector>
 
 class TriMesh {
 public:
     std::vector<TriVertex> vertices;
     std::vector<unsigned int> indices;
+
+    GLenum primitiveType = GL_TRIANGLES;
 
     void clear();
 };

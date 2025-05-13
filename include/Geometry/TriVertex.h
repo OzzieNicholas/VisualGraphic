@@ -3,6 +3,13 @@
 
 #pragma once
 
+#include <vector>
+
+#include <QOpenGLFunctions>
+#include <QOpenGLBuffer>
+#include <QOpenGLVertexArrayObject>
+#include <QOpenGLShaderProgram>
+
 #include <QVector3D>
 
 struct TriVertex {
