@@ -5,11 +5,13 @@
 
 #include <vector>
 
-#include <QOpenGLFunctions>
 #include <QOpenGLBuffer>
+#include <QOpenGLFunctions>
 #include <QOpenGLVertexArrayObject>
 #include <QOpenGLShaderProgram>
+#include <QOpenGLWidget>
 
+#include <QMouseEvent>
 #include <QVector3D>
 
 struct TriVertex {

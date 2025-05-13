@@ -1,13 +1,5 @@
 #pragma once
 
-#include <QOpenGLWidget>
-#include <QOpenGLFunctions>
-#include <QOpenGLShaderProgram>
-#include <QOpenGLVertexArrayObject>
-#include <QOpenGLBuffer>
-
-#include <QMouseEvent>
-
 #include "../Geometry/TriMesh.h"
 #include "../Renderer/TriMeshRenderer.h"
 
@@ -27,6 +19,7 @@ protected:
     void mousePressEvent(QMouseEvent* event) override;
     void mouseMoveEvent(QMouseEvent* event) override;
     void wheelEvent(QWheelEvent* event) override;
+	void keyPressEvent(QKeyEvent* event) override;
 
 private:
     TriMesh axisMesh;
@@ -40,4 +33,11 @@ private:
     float panX = 0.0f;
     float panY = 0.0f;
     QPoint lastMousePos;
+
+	QVector3D mapClickToPlane(float screenX, float screenY);
+
+    std::vector<QVector3D> polylinePoints;
+	TriMesh polylineMesh;
+	TriMeshRenderer polylineRenderer;
+    void polylineClear();
 };

@@ -64,9 +64,9 @@ TriMesh TriMeshBuilder::createGroundPlane(float size, uint resolution) {
             float x = -half + c * dx;
             float y = -half + r * dy;
             mesh.vertices.push_back({
-                QVector3D(x, y, 0.0f),          // pos
-                QVector3D(0, 0, 1),             // normal up
-                QVector3D(0.6f, 0.6f, 0.6f)     // gray color
+                QVector3D(x, y, 0.0f),
+                QVector3D(0, 0, 1),
+                QVector3D(0.6f, 0.6f, 0.6f)
             });
         }
     }
@@ -105,4 +105,17 @@ TriMesh TriMeshBuilder::createAxisArrow(float radius, float height, int segments
     }
 
     return mesh;
+}
+
+TriMesh TriMeshBuilder::createPolyline(const std::vector<QVector3D>& points, const QVector3D& color) {
+	TriMesh mesh;
+	mesh.primitiveType = GL_LINES;
+	for (const auto& point : points) {
+		mesh.vertices.push_back({ point, {}, color });
+	}
+	for (uint i = 0; i < points.size() - 1; ++i) {
+        mesh.indices.push_back(i);
+        mesh.indices.push_back(i + 1);
+	}
+	return mesh;
 }

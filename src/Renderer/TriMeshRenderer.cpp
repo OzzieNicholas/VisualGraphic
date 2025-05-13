@@ -30,9 +30,6 @@ void TriMeshRenderer::setMesh(const TriMesh& mesh) {
     ebo.bind();
     ebo.allocate(mesh.indices.data(), int(mesh.indices.size() * sizeof(unsigned int)));
 
-    // 假设 layout(location = 0) 为 position
-    //         layout(location = 1) 为 normal
-    //         layout(location = 2) 为 color
     QOpenGLFunctions* f = QOpenGLContext::currentContext()->functions();
     f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(TriVertex), (void*)offsetof(TriVertex, position));
     f->glEnableVertexAttribArray(0);

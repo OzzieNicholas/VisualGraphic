@@ -59,11 +59,19 @@ void SceneViewport::paintGL() {
         shader->bind();
         shader->setUniformValue("mvp", mvp);
 
+        // 地面
         renderer.setMesh(groundMesh);
         renderer.drawMesh(shader);
 
+        // 坐标轴
         renderer.setMesh(axisMesh);
         renderer.drawMesh(shader);
+
+		// 折线
+        if (!polylinePoints.empty()) {
+            polylineRenderer.setMesh(polylineMesh);
+            polylineRenderer.drawMesh(shader);
+        }
 
         shader->release();
     }
@@ -71,6 +79,15 @@ void SceneViewport::paintGL() {
 
 void SceneViewport::mousePressEvent(QMouseEvent* event) {
     lastMousePos = event->pos();
+
+	if (event->button() == Qt::LeftButton) {
+		QVector3D worldCoord = mapClickToPlane(event->position().x(), event->position().y());
+		qDebug() << "Z=0:" << worldCoord;
+        polylinePoints.push_back(worldCoord);
+		polylineMesh = TriMeshBuilder::createPolyline(polylinePoints, QVector3D(1.0f, 0.0f, 0.0f));
+		polylineRenderer.setMesh(polylineMesh);
+		update();
+	}
 }
 
 void SceneViewport::mouseMoveEvent(QMouseEvent* event) {
@@ -95,4 +112,59 @@ void SceneViewport::wheelEvent(QWheelEvent* event) {
     if (zoom < 2.0f) zoom = 2.0f;
     if (zoom > 100.0f) zoom = 100.0f;
     update();
+}
+
+QVector3D SceneViewport::mapClickToPlane(float screenX, float screenY) {
+	// 屏幕坐标 → NDC
+	float ndcX = (2.0f * screenX) / width() - 1.0f;
+	float ndcY = 1.0f - (2.0f * screenY) / height();
+	
+	// 构造与 paintGL 一致的投影视图矩阵
+	QMatrix4x4 projection;
+	projection.perspective(45.0f, width() / float(height()), 0.1f, 100.0f);
+	QMatrix4x4 view;
+	view.translate(panX, panY, -zoom);
+	view.rotate(rotationX, 1.0f, 0.0f);
+	view.rotate(rotationY, 0.0f, 1.0f);
+	QMatrix4x4 invPV = (projection * view).inverted();
+
+	// 将 NDC 转换为世界坐标
+    QVector4D nearPointNDC(ndcX, ndcY, -1.0f, 1.0f); // 近平面
+    QVector4D farPointNDC(ndcX, ndcY, 1.0f, 1.0f);   // 远平面
+	QVector4D nearWorld = invPV * nearPointNDC;
+	QVector4D farWorld = invPV * farPointNDC;
+	nearWorld /= nearWorld.w();
+	farWorld /= farWorld.w();
+	QVector3D rayOrigin = nearWorld.toVector3D();
+	QVector3D rayDir = (farWorld - nearWorld).toVector3D().normalized();
+
+	// 与 Z=0 平面求交
+	if (qAbs(rayDir.z()) < 1e-6f) {
+		// 射线与平面平行
+		return QVector3D(
+            std::numeric_limits<float>::quiet_NaN(),
+			std::numeric_limits<float>::quiet_NaN(),
+			std::numeric_limits<float>::quiet_NaN()
+        );
+	}
+
+	float t = -rayOrigin.z() / rayDir.z();
+	QVector3D intersection = rayOrigin + t * rayDir;
+	return intersection;
+}
+
+void SceneViewport::polylineClear() {
+	polylinePoints.clear();
+	polylineMesh.clear();
+	polylineRenderer.setMesh(polylineMesh);
+	update();
+}
+
+void SceneViewport::keyPressEvent(QKeyEvent* event) {
+	if (event->key() == Qt::Key_Escape) {
+		polylineClear();
+	}
+    else {
+		QOpenGLWidget::keyPressEvent(event);
+    }
 }
