@@ -3,16 +3,7 @@
 
 #pragma once
 
-#include <vector>
-
-#include <QOpenGLBuffer>
-#include <QOpenGLFunctions>
-#include <QOpenGLVertexArrayObject>
-#include <QOpenGLShaderProgram>
-#include <QOpenGLWidget>
-
-#include <QMouseEvent>
-#include <QVector3D>
+#include "../CommonIncludes.h"
 
 struct TriVertex {
     QVector3D position;

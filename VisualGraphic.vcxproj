@@ -38,7 +38,7 @@
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
     <QtInstall>6.10.0_msvc2022_64</QtInstall>
-    <QtModules>core;gui;opengl;openglwidgets;widgets</QtModules>
+    <QtModules>core;gui;widgets;opengl;openglwidgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
@@ -64,6 +64,11 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
   </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PreprocessorDefinitions>_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
     <ClCompile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
@@ -105,15 +110,18 @@
     <ClCompile Include="src\Geometry\TriMeshBuilder.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\Renderer\TriMeshRenderer.cpp" />
-    <ClCompile Include="src\Widgets\BasicAxis.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="include\Widgets\BasicAxis.h" />
-  </ItemGroup>
-  <ItemGroup>
+    <ClInclude Include="include\CommonIncludes.h" />
+    <ClInclude Include="include\Geometry\GeometryIncludes.h" />
     <ClInclude Include="include\Geometry\TriMesh.h" />
     <ClInclude Include="include\Geometry\TriMeshBuilder.h" />
-    <ClInclude Include="include\Geometry\TriVertex.h" />
+    <ClInclude Include="include\Renderer\RendererIncludes.h" />
+    <ClInclude Include="include\Utils\UtilsIncludes.h" />
+    <ClInclude Include="include\Utils\UtilsMath.h" />
+    <ClInclude Include="include\Utils\UtilsMesh.h" />
+    <ClInclude Include="include\Utils\UtilsOpenGL.h" />
+    <ClInclude Include="include\Widgets\WidgetsIncludes.h" />
     <QtMoc Include="include\Widgets\SceneViewport.h" />
   </ItemGroup>
   <ItemGroup>

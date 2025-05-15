@@ -3,7 +3,13 @@
 
 #pragma once
 
-#include "./TriVertex.h"
+#include "../CommonIncludes.h"
+
+struct TriVertex {
+    QVector3D position;
+    QVector3D normal;
+    QVector3D color;
+};
 
 class TriMesh {
 public:

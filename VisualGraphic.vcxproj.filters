@@ -36,9 +36,6 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Widgets\BasicAxis.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\Geometry\TriMesh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -56,21 +53,39 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="include\Widgets\BasicAxis.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
     <QtMoc Include="include\Widgets\SceneViewport.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Geometry\TriVertex.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Geometry\TriMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Geometry\TriMeshBuilder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CommonIncludes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\UtilsMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\UtilsMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\UtilsOpenGL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Geometry\GeometryIncludes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Renderer\RendererIncludes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Utils\UtilsIncludes.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Widgets\WidgetsIncludes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
