@@ -31,7 +31,7 @@ void SceneViewport::initializeGL() {
     axisMesh = TriMeshBuilder::createAxisLines(5.0f);
 
     renderer.setMesh(groundMesh);
-    renderer.setMesh(axisMesh); // 后面可以扩展 set多个 renderer
+    renderer.setMesh(axisMesh);
 }
 
 void SceneViewport::resizeGL(int w, int h) {
@@ -58,15 +58,12 @@ void SceneViewport::paintGL() {
         shader->bind();
         shader->setUniformValue("mvp", mvp);
 
-        // 地面
         renderer.setMesh(groundMesh);
         renderer.drawMesh(shader);
 
-        // 坐标轴
         renderer.setMesh(axisMesh);
         renderer.drawMesh(shader);
 
-		// 折线
         if (!polylinePoints.empty()) {
             polylineRenderer.setMesh(polylineMesh);
             polylineRenderer.drawMesh(shader);

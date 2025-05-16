@@ -1,6 +1,3 @@
-// TriMeshRenderer.cpp
-// 实现 TriMeshRenderer，负责上传 VAO/VBO 并绘制
-
 #include "../../include/Renderer/TriMeshRenderer.h"
 
 TriMeshRenderer::TriMeshRenderer()
@@ -25,26 +22,26 @@ void TriMeshRenderer::setMesh(const TriMesh& mesh) {
     vao.bind();
 
     vbo.bind();
-    vbo.allocate(mesh.vertices.data(), int(mesh.vertices.size() * sizeof(TriVertex)));
+    vbo.allocate(mesh.getVertices().data(), int(mesh.getVertices().size() * sizeof(MeshVertex)));
 
     ebo.bind();
-    ebo.allocate(mesh.indices.data(), int(mesh.indices.size() * sizeof(unsigned int)));
+    ebo.allocate(mesh.getIndices().data(), int(mesh.getIndices().size() * sizeof(unsigned int)));
 
     QOpenGLFunctions* f = QOpenGLContext::currentContext()->functions();
-    f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(TriVertex), (void*)offsetof(TriVertex, position));
+    f->glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*)offsetof(MeshVertex, position));
     f->glEnableVertexAttribArray(0);
-    f->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(TriVertex), (void*)offsetof(TriVertex, normal));
+    f->glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*)offsetof(MeshVertex, normal));
     f->glEnableVertexAttribArray(1);
-    f->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(TriVertex), (void*)offsetof(TriVertex, color));
+    f->glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(MeshVertex), (void*)offsetof(MeshVertex, color));
     f->glEnableVertexAttribArray(2);
 
     vao.release();
     vbo.release();
     ebo.release();
 
-    indexCount = int(mesh.indices.size());
+    indexCount = int(mesh.getIndices().size());
 	
-    switch (mesh.drawPrimitiveType) {
+    switch (mesh.getDrawType()) {
         case DrawPrimitiveType::Triangles:
             drawMode = GL_TRIANGLES;
             break;

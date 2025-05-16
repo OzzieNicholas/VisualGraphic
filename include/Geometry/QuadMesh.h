@@ -2,10 +2,10 @@
 
 #include "./Mesh.h"
 
-class TriMesh : public Mesh {
+class QuadMesh : public Mesh {
 public:
-	TriMesh();
-	~TriMesh();
+	QuadMesh();
+	~QuadMesh();
 	void setVertices(const std::vector<MeshVertex>& vertices) override;
 	void setIndices(const std::vector<uint>& indices) override;
 	void setDrawType(DrawPrimitiveType drawType) override;

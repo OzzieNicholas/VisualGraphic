@@ -1,6 +1,3 @@
-// TriMeshBuilder.h
-// 工具类，用于生成标准网格（如平面、曲面）并返回 TriMesh 实例
-
 #pragma once
 #include "./TriMesh.h"
 

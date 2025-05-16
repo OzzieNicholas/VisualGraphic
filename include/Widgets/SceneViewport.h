@@ -5,6 +5,7 @@
 #include "../Renderer/TriMeshRenderer.h"
 
 #include <QMouseEvent>
+#include <QOpenGLWidget>
 
 class SceneViewport  : public QOpenGLWidget, protected QOpenGLFunctions
 {
