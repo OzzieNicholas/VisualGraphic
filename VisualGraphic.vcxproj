@@ -105,6 +105,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\Renderer\TriMeshRenderer.h" />
+    <ClCompile Include="src\Geometry\LineMesh.cpp" />
+    <ClCompile Include="src\Geometry\LineMeshBuilder.cpp" />
+    <ClCompile Include="src\Geometry\QuadMesh.cpp" />
     <ClCompile Include="src\Widgets\SceneViewport.cpp" />
     <ClCompile Include="src\Geometry\TriMesh.cpp" />
     <ClCompile Include="src\Geometry\TriMeshBuilder.cpp" />
@@ -112,12 +115,15 @@
     <ClCompile Include="src\Renderer\TriMeshRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Geometry\LineMesh.h" />
+    <ClInclude Include="include\Geometry\LineMeshBuilder.h" />
+    <ClInclude Include="include\Geometry\Mesh.h" />
+    <ClInclude Include="include\Geometry\QuadMesh.h" />
     <ClInclude Include="include\Geometry\TriMesh.h" />
     <ClInclude Include="include\Geometry\TriMeshBuilder.h" />
     <ClInclude Include="include\Utils\UtilsMath.h" />
     <ClInclude Include="include\Utils\UtilsMesh.h" />
     <ClInclude Include="include\Utils\UtilsOpenGL.h" />
-    <ClInclude Include="include\Widgets\WidgetsIncludes.h" />
     <QtMoc Include="include\Widgets\SceneViewport.h" />
   </ItemGroup>
   <ItemGroup>
