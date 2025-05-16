@@ -46,7 +46,7 @@ TriMesh TriMeshBuilder::createAxisLines(float length) {
         {{0, 0, 0}, {}, {0, 0, 1}}, {{0, 0, L}, {}, {0, 0, 1}}  // Z - À¶
     };
     mesh.indices = { 0, 1, 2, 3, 4, 5 };
-	mesh.primitiveType = GL_LINES;
+	mesh.drawPrimitiveType = DrawPrimitiveType::Lines;
     return mesh;
 }
 
@@ -109,7 +109,7 @@ TriMesh TriMeshBuilder::createAxisArrow(float radius, float height, int segments
 
 TriMesh TriMeshBuilder::createPolyline(const std::vector<QVector3D>& points, const QVector3D& color) {
 	TriMesh mesh;
-	mesh.primitiveType = GL_LINES;
+	mesh.drawPrimitiveType = DrawPrimitiveType::Lines;
 	for (const auto& point : points) {
 		mesh.vertices.push_back({ point, {}, color });
 	}

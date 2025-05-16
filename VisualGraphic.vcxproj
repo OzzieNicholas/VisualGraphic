@@ -112,12 +112,8 @@
     <ClCompile Include="src\Renderer\TriMeshRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\CommonIncludes.h" />
-    <ClInclude Include="include\Geometry\GeometryIncludes.h" />
     <ClInclude Include="include\Geometry\TriMesh.h" />
     <ClInclude Include="include\Geometry\TriMeshBuilder.h" />
-    <ClInclude Include="include\Renderer\RendererIncludes.h" />
-    <ClInclude Include="include\Utils\UtilsIncludes.h" />
     <ClInclude Include="include\Utils\UtilsMath.h" />
     <ClInclude Include="include\Utils\UtilsMesh.h" />
     <ClInclude Include="include\Utils\UtilsOpenGL.h" />

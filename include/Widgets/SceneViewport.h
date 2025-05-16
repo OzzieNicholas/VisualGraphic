@@ -1,7 +1,10 @@
 #pragma once
 
 #include "../Geometry/TriMesh.h"
+#include "../../include/Geometry/TriMeshBuilder.h"
 #include "../Renderer/TriMeshRenderer.h"
+
+#include <QMouseEvent>
 
 class SceneViewport  : public QOpenGLWidget, protected QOpenGLFunctions
 {

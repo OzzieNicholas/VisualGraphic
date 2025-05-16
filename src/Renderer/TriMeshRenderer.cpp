@@ -43,7 +43,24 @@ void TriMeshRenderer::setMesh(const TriMesh& mesh) {
     ebo.release();
 
     indexCount = int(mesh.indices.size());
-	drawMode = mesh.primitiveType;
+	
+    switch (mesh.drawPrimitiveType) {
+        case DrawPrimitiveType::Triangles:
+            drawMode = GL_TRIANGLES;
+            break;
+        case DrawPrimitiveType::Lines:
+            drawMode = GL_LINES;
+            break;
+        case DrawPrimitiveType::Points:
+            drawMode = GL_POINTS;
+            break;
+        case DrawPrimitiveType::Quads:
+            drawMode = GL_QUADS;
+            break;
+        default:
+            drawMode = GL_TRIANGLES;
+            break;
+    }
 }
 
 void TriMeshRenderer::drawMesh(QOpenGLShaderProgram* program) {

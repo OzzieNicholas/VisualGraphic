@@ -1,5 +1,4 @@
 #include "../../include/Widgets/SceneViewport.h"
-#include "../../include/Geometry/TriMeshBuilder.h"
 
 SceneViewport::SceneViewport(QWidget* parent) : QOpenGLWidget(parent) {
     QSurfaceFormat format;

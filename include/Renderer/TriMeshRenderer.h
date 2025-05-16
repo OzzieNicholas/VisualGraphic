@@ -5,6 +5,11 @@
 
 #include "../Geometry/TriMesh.h"
 
+#include <QOpenGLBuffer>
+#include <QOpenGLFunctions>
+#include <QOpenGLShaderProgram>
+#include <QOpenGLVertexArrayObject>
+
 class TriMeshRenderer {
 public:
     TriMeshRenderer();

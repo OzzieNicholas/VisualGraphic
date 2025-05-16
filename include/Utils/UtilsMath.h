@@ -11,7 +11,7 @@ inline QVector3D crossProduct(const QVector3D& a, const QVector3D& b) {
 	return QVector3D::crossProduct(a, b);
 }
 
-inline float dorProduct(const QVector3D& a, const QVector3D& b) {
+inline float dotProduct(const QVector3D& a, const QVector3D& b) {
 	return QVector3D::dotProduct(a, b);
 }
 

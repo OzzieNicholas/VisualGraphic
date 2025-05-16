@@ -4,6 +4,8 @@
 #pragma once
 #include "./TriMesh.h"
 
+class TriMesh;
+
 class TriMeshBuilder {
 public:
     static TriMesh createGrid(uint rows, uint cols, float size);

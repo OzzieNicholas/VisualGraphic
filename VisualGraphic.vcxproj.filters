@@ -64,9 +64,6 @@
     <ClInclude Include="include\Geometry\TriMeshBuilder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\CommonIncludes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\Utils\UtilsMath.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -74,15 +71,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Utils\UtilsOpenGL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Geometry\GeometryIncludes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Renderer\RendererIncludes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Utils\UtilsIncludes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Widgets\WidgetsIncludes.h">
