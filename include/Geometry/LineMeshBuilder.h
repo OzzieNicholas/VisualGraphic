@@ -5,5 +5,5 @@
 class LineMeshBuilder {
 public:
 	static LineMesh createAxisLines(float length);
-	static LineMesh ceatePolyline(const std::vector<QVector3D>& points, const QVector3D& color);
+	static LineMesh createPolyline(const std::vector<QVector3D>& points, const QVector3D& color);
 };

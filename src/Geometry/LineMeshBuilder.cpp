@@ -20,7 +20,7 @@ LineMesh LineMeshBuilder::createAxisLines(float length) {
     return mesh;
 }
 
-LineMesh LineMeshBuilder::ceatePolyline(const std::vector<QVector3D>& points, const QVector3D& color) {
+LineMesh LineMeshBuilder::createPolyline(const std::vector<QVector3D>& points, const QVector3D& color) {
     LineMesh mesh;
 
     std::vector<MeshVertex> vertices;

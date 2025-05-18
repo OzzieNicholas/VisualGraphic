@@ -7,25 +7,35 @@ namespace Utils{
 
 namespace Math {
 
-inline QVector3D crossProduct(const QVector3D& a, const QVector3D& b) {
-	return QVector3D::crossProduct(a, b);
-}
+	// 弧度转换为角度
+	float radiansToDegrees(float radians);
 
-inline float dotProduct(const QVector3D& a, const QVector3D& b) {
-	return QVector3D::dotProduct(a, b);
-}
+	// 角度转换为弧度
+	float degreesToRadians(float degrees);
 
-inline QMatrix4x4 makeTranslationMatrix(const QVector3D& translation) {
-	QMatrix4x4 matrix;
-	matrix.translate(translation);
-	return matrix;
-}
+	// 计算两个向量的叉积
+	QVector3D crossProduct(const QVector3D& vectorA, const QVector3D& vectorB);
 
-inline QMatrix4x4 makeRotationMatrix(float angle, const QVector3D& axis) {
-	QMatrix4x4 matrix;
-	matrix.rotate(angle, axis);
-	return matrix;
-}
+	// 计算两个向量的点积
+	float dotProduct(const QVector3D& vectorA, const QVector3D& vectorB);
+
+	// 创建平移矩阵
+	QMatrix4x4 makeTranslationMatrix(const QVector3D& translation);
+
+	// 创建旋转矩阵
+	QMatrix4x4 makeRotationMatrix(float angle, const QVector3D& axis);
+
+	// 创建缩放矩阵
+	QMatrix4x4 makeScaleMatrix(const QVector3D& scale);
+
+	// 组合平移旋转缩放矩阵
+	QMatrix4x4 makeTransformMatrix(const QVector3D& translation, float angle, const QVector3D& axis, const QVector3D& scale);
+
+	// 创建正交投影矩阵
+	QMatrix4x4 makeOrthographicMatrix(float left, float right, float bottom, float top, float nearPlane, float farPlane);
+
+	// 创建透视投影矩阵
+	QMatrix4x4 makePerspectiveMatrix(float fov, float aspectRatio, float nearPlane, float farPlane);
 
 } // namespace Math
 

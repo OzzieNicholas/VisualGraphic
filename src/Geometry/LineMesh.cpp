@@ -1,7 +1,7 @@
 #include "../../include/Geometry/LineMesh.h"
 
 LineMesh::LineMesh() {
-
+    drawPrimitiveType = DrawPrimitiveType::Lines;
 }
 
 LineMesh::~LineMesh() {

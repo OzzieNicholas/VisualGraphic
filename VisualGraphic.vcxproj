@@ -107,7 +107,11 @@
     <ClCompile Include="include\Renderer\TriMeshRenderer.h" />
     <ClCompile Include="src\Geometry\LineMesh.cpp" />
     <ClCompile Include="src\Geometry\LineMeshBuilder.cpp" />
+    <ClCompile Include="src\Geometry\Mesh.cpp" />
     <ClCompile Include="src\Geometry\QuadMesh.cpp" />
+    <ClCompile Include="src\Utils\UtilsMath.cpp" />
+    <ClCompile Include="src\Utils\UtilsMesh.cpp" />
+    <ClCompile Include="src\Utils\UtilsOpenGL.cpp" />
     <ClCompile Include="src\Widgets\SceneViewport.cpp" />
     <ClCompile Include="src\Geometry\TriMesh.cpp" />
     <ClCompile Include="src\Geometry\TriMeshBuilder.cpp" />
