@@ -1,31 +1,24 @@
 #include "../../include/Geometry/Mesh.h"
 
-// 几何维度：返回2表示二维网格，返回3表示三维
-int Mesh::dimension() const {
-    if (vertices.empty()) return 0;
-    bool is2D = std::all_of(
-        vertices.begin(),
-        vertices.end(),
-        [](const MeshVertex& v) {
-            return std::abs(v.position.z()) < 1e-6;
-        }
-    );
-    return is2D ? 2 : 3;
+// ========== 数据设置与获取 ========== //
+
+// 获取顶点数组
+const std::vector<MeshVertex>& Mesh::getVertices() const {
+    return vertices;
 }
 
-// 是否包含法线数据
-bool Mesh::hasNormals() const {
-    return std::any_of(
-        vertices.begin(),
-        vertices.end(),
-        [](const MeshVertex& v) {
-            return !v.normal.isNull();
-        }
-    );
+// 获取索引数组
+const std::vector<uint>& Mesh::getIndices() const {
+    return indices;
+}
+
+// 获取当前绘制图元类型
+DrawPrimitiveType Mesh::getDrawPrimitiveType() const {
+    return drawPrimitiveType;
 }
 
 // 获取包围盒（返回最小点和最大点）
-std::pair<QVector3D, QVector3D> Mesh::getBoundingBox() const {
+std::pair<QVector3D, QVector3D> Mesh::computeBoundingBox() const {
     if (vertices.empty()) return { {}, {} };
     QVector3D min = vertices[0].position;
     QVector3D max = vertices[0].position;
@@ -38,4 +31,82 @@ std::pair<QVector3D, QVector3D> Mesh::getBoundingBox() const {
         max.setZ(std::max(max.z(), v.position.z()));
     }
     return { min, max };
+}
+
+// 清空网格数据
+void Mesh::clearGeometryData() {
+    vertices.clear();
+    indices.clear();
+}
+
+// ========== 几何属性判定 ========== //
+
+// 判断顶点和索引是否有效
+bool Mesh::hasValidGeometry() const {
+    return !vertices.empty() && !indices.empty();
+}
+
+// 判断图形是否闭合
+bool Mesh::isGeometryClosed() const {
+    return false;
+}
+
+// 判断几何维度：返回2表示二维网格，返回3表示三维
+int Mesh::getGeometryDimension() const {
+    if (vertices.empty()) return 0;
+    bool is2D = std::all_of(
+        vertices.begin(),
+        vertices.end(),
+        [](const MeshVertex& v) {
+            return std::abs(v.position.z()) < 1e-6;
+        }
+    );
+    return is2D ? 2 : 3;
+}
+
+// 判断是否包含法线数据
+bool Mesh::hasNormalData() const {
+    return std::any_of(
+        vertices.begin(),
+        vertices.end(),
+        [](const MeshVertex& v) {
+            return !v.normal.isNull();
+        }
+    );
+}
+
+// ======== 几何变换与采样 ======== //
+
+// 对曲线/曲面采样点（用于渲染或动画）
+std::vector<QVector3D> Mesh::samplePoints(int count) const {
+    return {};
+}
+
+// ======== 可视化 ======== //
+
+// 设置动画状态参数
+void Mesh::setAnimationStep(float step) {
+    animationStep = step;
+}
+
+// 获取动画状态参数
+float Mesh::getAnimationStep() const {
+    return animationStep;
+}
+
+// ======== 导出功能 ======== //
+
+// 导出为 SVG 路径
+
+std::string Mesh::exportToSvgPath() const {
+    return {};
+}
+
+// 导出为 JSON 字符串
+std::string Mesh::exportToJson() const {
+    return {};
+}
+
+// 从 JSON 字符串导入
+void Mesh::importFromJson(const std::string&) {
 }

@@ -1,9 +1,25 @@
+/*
+ * Mesh.h：网格基类接口定义（抽象基类）
+ *
+ * 功能概述：
+ *  - 提供所有网格类型（如 TriMesh、LineMesh、QuadMesh 等）的统一抽象接口
+ *  - 包含顶点、索引、图元类型、动画状态等通用数据成员
+ *  - 提供几何访问、变换、判定、导出等接口
+ *  - 子类需实现核心纯虚函数，支持自定义构造与渲染
+ *
+ * 使用场景：
+ *  - 几何数据建模（Geometry 模块）
+ *  - OpenGL 渲染上传（Renderer 模块）
+ *  - 支持拓展到曲线、曲面等类型
+ */
+
 #pragma once
 
 #include <vector>
 #include <QVector3D>
+#include <QMatrix4x4>
 
-//绘制的基本图元类型
+// ========== 基本图元类型 ========== //
 enum class DrawPrimitiveType {
     Points,
     Lines,
@@ -11,7 +27,7 @@ enum class DrawPrimitiveType {
     Quads,
 };
 
-// 通用顶点数据结构，包含几何、法线、颜色、纹理等属性
+// ========== 顶点数据结构 ========== //
 struct MeshVertex {
     QVector3D position;   // 顶点位置
     QVector3D normal;     // 法线向量
@@ -21,12 +37,12 @@ struct MeshVertex {
     QVector3D bitangent;  // 副切线向量
 };
 
-// 网格抽象基类：定义所有 Mesh 类型的通用接口
+// ========== 网格抽象基类 ========== //
 class Mesh {
 public:
     virtual ~Mesh() = default;
 
-// 几何数据设置与访问
+    // ========== 数据设置与获取 ========== //
 
     // 设置顶点数组
     virtual void setVertices(const std::vector<MeshVertex>& vertices) = 0;
@@ -38,74 +54,62 @@ public:
     virtual void setDrawType(DrawPrimitiveType drawType) = 0;
 
     // 获取顶点数组
-    virtual const std::vector<MeshVertex>& getVertices() const = 0;
+    virtual const std::vector<MeshVertex>& getVertices() const;
 
     // 获取索引数组
-    virtual const std::vector<uint>& getIndices() const = 0;
+    virtual const std::vector<uint>& getIndices() const;
 
     // 获取当前绘制图元类型
-    virtual DrawPrimitiveType getDrawType() const = 0;
+    virtual DrawPrimitiveType getDrawPrimitiveType() const;
+
+    // 获取包围盒
+    virtual std::pair<QVector3D, QVector3D> computeBoundingBox() const;
 
     // 清空网格数据
-    virtual void clear() = 0;
+    virtual void clearGeometryData();
 
-// 几何属性判定
+    // ========== 几何属性判定 ========== //
 
     // 判断顶点和索引是否有效
-    virtual bool isValid() const {
-        return !vertices.empty() && !indices.empty();
-    }
+    virtual bool hasValidGeometry() const;
 
-    // 是否为闭合图形（如闭合曲线、多边形）
-    virtual bool isClosed() const {
-        return false;
-    }
+    // 判断图形是否闭合
+    virtual bool isGeometryClosed() const;
 
-    // 几何维度：返回2表示二维网格，返回3表示三维
-    virtual int dimension() const;
+    // 判断几何维度：返回2表示二维网格，返回3表示三维
+    virtual int getGeometryDimension() const;
 
-    // 是否包含法线数据
-    virtual bool hasNormals() const;
+    // 判断是否包含法线数据
+    virtual bool hasNormalData() const;
 
-    // 获取包围盒（返回最小点和最大点）
-    virtual std::pair<QVector3D, QVector3D> getBoundingBox() const;
-
-// 几何变换与采样
+    // ======== 几何变换与采样 ======== //
 
     // 应用变换矩阵到所有顶点
     virtual void applyTransform(const QMatrix4x4& matrix) = 0;
 
     // 对曲线/曲面采样点（用于渲染或动画）
-    virtual std::vector<QVector3D> samplePoints(int count = 100) const {
-        return {};
-    }
+    virtual std::vector<QVector3D> samplePoints(int count = 100) const;
 
-// 导出接口（JSON / SVG）
+    // ======== 可视化 ======== //
 
-    // 导出为 SVG 路径（如 "M 0 0 L 1 1 ..."）
-    virtual std::string toSvgPath() const {
+    // 设置动画状态参数
+    virtual void setAnimationStep(float step);
+
+    // 获取动画状态参数
+    virtual float getAnimationStep() const;
+
+    // ======== 导出功能 ======== //
+
+    // 导出为 SVG 路径
+    virtual std::string exportToSvgPath() const {
         return {};
     }
 
     // 导出为 JSON 字符串
-    virtual std::string toJson() const {
-        return {};
-    }
+    virtual std::string exportToJson() const;
 
     // 从 JSON 字符串导入
-    virtual void fromJson(const std::string&) {}
-
-// 动画支持
-
-    // 设置动画状态（如 t 参数）
-    virtual void setAnimationStep(float step) {
-        animationStep = step;
-    }
-
-    // 获取动画状态参数
-    virtual float getAnimationStep() const {
-        return animationStep;
-    }
+    virtual void importFromJson(const std::string&);
 
 protected:
     std::vector<MeshVertex> vertices;       // 顶点数组
