@@ -10,7 +10,7 @@ SceneViewport::SceneViewport(QWidget* parent) : QOpenGLWidget(parent) {
 
 SceneViewport::~SceneViewport() {
     makeCurrent();
-    delete shader;
+    delete m_shaderProgram;
     doneCurrent();
 }
 
@@ -20,18 +20,26 @@ void SceneViewport::initializeGL() {
     glEnable(GL_MULTISAMPLE);
     glClearColor(0.15f, 0.2f, 0.25f, 1.0f);
 
-    shader = new QOpenGLShaderProgram(this);
-    shader->addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/tri_mesh.vert");
-    shader->addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/tri_mesh.frag");
-    if (!shader->link()) {
-        qDebug() << "Shader link error:" << shader->log();
+    // 初始化并编译着色器
+    m_shaderProgram = new QOpenGLShaderProgram(this);
+    m_shaderProgram->addShaderFromSourceFile(QOpenGLShader::Vertex, "shaders/tri_mesh.vert");
+    m_shaderProgram->addShaderFromSourceFile(QOpenGLShader::Fragment, "shaders/tri_mesh.frag");
+    if (!m_shaderProgram->link()) {
+        qDebug() << "Shader link error:" << m_shaderProgram->log();
     }
 
-    groundMesh = TriMeshBuilder::createGroundPlane(40.0f, 100);
-    axisMesh = TriMeshBuilder::createAxisLines(5.0f);
+    // 构建地面网格并上传
+    m_groundMesh = TriMeshBuilder::buildGroundPlaneMesh(40.0f, 100);
+    m_groundRenderer.setMesh(m_groundMesh);
 
-    renderer.setMesh(groundMesh);
-    renderer.setMesh(axisMesh);
+    // 构建坐标轴（使用 LineMesh）
+    m_axisLineMesh = LineMeshBuilder::buildAxisLines(5.0f);
+    m_axisRenderer.setMesh(m_axisLineMesh);
+
+    // 初始化空折线
+    m_polylinePoints.clear();
+    m_polylineMesh.clearGeometryData();
+    m_polylineRenderer.setMesh(m_polylineMesh);
 }
 
 void SceneViewport::resizeGL(int w, int h) {
@@ -41,72 +49,83 @@ void SceneViewport::resizeGL(int w, int h) {
 void SceneViewport::paintGL() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // 投影矩阵
     QMatrix4x4 projection;
     projection.perspective(45.0f, float(width()) / height(), 0.1f, 100.0f);
 
+    // 视图矩阵
     QMatrix4x4 view;
-    view.translate(panX, panY, -zoom);
-    view.rotate(rotationX, 1.0f, 0.0f, 0.0f);
-    view.rotate(rotationY, 0.0f, 1.0f, 0.0f);
+    view.translate(m_panX, m_panY, -m_zoom);
+    view.rotate(m_rotationX, 1.0f, 0.0f, 0.0f);
+    view.rotate(m_rotationY, 0.0f, 1.0f, 0.0f);
 
+    // 模型矩阵
     QMatrix4x4 model;
     model.setToIdentity();
 
+    // 合成变换矩阵
     QMatrix4x4 mvp = projection * view * model;
 
-    if (shader) {
-        shader->bind();
-        shader->setUniformValue("mvp", mvp);
+    if (m_shaderProgram) {
+        m_shaderProgram->bind();
+        m_shaderProgram->setUniformValue("mvp", mvp);
 
-        renderer.setMesh(groundMesh);
-        renderer.drawMesh(shader);
+        // 绘制地面
+        m_groundRenderer.renderMesh(m_shaderProgram);
 
-        renderer.setMesh(axisMesh);
-        renderer.drawMesh(shader);
+        // 绘制坐标轴
+        m_axisRenderer.renderMesh(m_shaderProgram);
 
-        if (!polylinePoints.empty()) {
-            polylineRenderer.setMesh(polylineMesh);
-            polylineRenderer.drawMesh(shader);
+        // 绘制折线
+        if (!m_polylinePoints.empty()) {
+            m_polylineRenderer.renderMesh(m_shaderProgram);
         }
 
-        shader->release();
+        m_shaderProgram->release();
     }
 }
 
 void SceneViewport::mousePressEvent(QMouseEvent* event) {
-    lastMousePos = event->pos();
+    m_lastMousePos = event->pos();
 
-	if (event->button() == Qt::LeftButton) {
-		QVector3D worldCoord = mapClickToPlane(event->position().x(), event->position().y());
-		qDebug() << "Z=0:" << worldCoord;
-        polylinePoints.push_back(worldCoord);
-		polylineMesh = TriMeshBuilder::createPolyline(polylinePoints, QVector3D(1.0f, 0.0f, 0.0f));
-		polylineRenderer.setMesh(polylineMesh);
-		update();
-	}
+    if (event->button() == Qt::LeftButton) {
+        // 将点击位置映射到 Z=0 平面
+        QVector3D worldCoord = mapClickToPlane(event->position().x(), event->position().y());
+        qDebug() << "Z=0 Click:" << worldCoord;
+
+        // 添加点到折线集合
+        m_polylinePoints.push_back(worldCoord);
+
+        // 更新折线网格
+        m_polylineMesh = LineMeshBuilder::buildPolylineMesh(m_polylinePoints, QVector3D(1.0f, 0.0f, 0.0f));
+        m_polylineRenderer.setMesh(m_polylineMesh);
+
+        // 请求重绘
+        update();
+    }
 }
 
 void SceneViewport::mouseMoveEvent(QMouseEvent* event) {
-    int dx = int(event->position().x() - lastMousePos.x());
-    int dy = int(event->position().y() - lastMousePos.y());
+    int dx = int(event->position().x() - m_lastMousePos.x());
+    int dy = int(event->position().y() - m_lastMousePos.y());
 
     if (event->buttons() & Qt::MiddleButton) {
-        rotationX += dy * 0.5f;
-        rotationY += dx * 0.5f;
+        m_rotationX += dy * 0.5f;
+        m_rotationY += dx * 0.5f;
     }
     else if (event->buttons() & Qt::RightButton) {
-        panX += dx * 0.01f;
-        panY -= dy * 0.01f;
+        m_panX += dx * 0.01f;
+        m_panY -= dy * 0.01f;
     }
 
-    lastMousePos = event->pos();
+    m_lastMousePos = event->pos();
     update();
 }
 
 void SceneViewport::wheelEvent(QWheelEvent* event) {
-    zoom -= event->angleDelta().y() / 120.0f;
-    if (zoom < 2.0f) zoom = 2.0f;
-    if (zoom > 100.0f) zoom = 100.0f;
+    m_zoom -= event->angleDelta().y() / 120.0f;
+    if (m_zoom < 2.0f) m_zoom = 2.0f;
+    if (m_zoom > 100.0f) m_zoom = 100.0f;
     update();
 }
 
@@ -119,9 +138,9 @@ QVector3D SceneViewport::mapClickToPlane(float screenX, float screenY) {
 	QMatrix4x4 projection;
 	projection.perspective(45.0f, width() / float(height()), 0.1f, 100.0f);
 	QMatrix4x4 view;
-	view.translate(panX, panY, -zoom);
-	view.rotate(rotationX, 1.0f, 0.0f);
-	view.rotate(rotationY, 0.0f, 1.0f);
+	view.translate(m_panX, m_panY, -m_zoom);
+	view.rotate(m_rotationX, 1.0f, 0.0f);
+	view.rotate(m_rotationY, 0.0f, 1.0f);
 	QMatrix4x4 invPV = (projection * view).inverted();
 
 	// 将 NDC 转换为世界坐标
@@ -149,16 +168,16 @@ QVector3D SceneViewport::mapClickToPlane(float screenX, float screenY) {
 	return intersection;
 }
 
-void SceneViewport::polylineClear() {
-	polylinePoints.clear();
-	polylineMesh.clear();
-	polylineRenderer.setMesh(polylineMesh);
+void SceneViewport::clearPolyline() {
+    m_polylinePoints.clear();
+    m_polylineMesh.clearGeometryData();
+    m_polylineRenderer.setMesh(m_polylineMesh);
 	update();
 }
 
 void SceneViewport::keyPressEvent(QKeyEvent* event) {
 	if (event->key() == Qt::Key_Escape) {
-		polylineClear();
+        clearPolyline();
 	}
     else {
 		QOpenGLWidget::keyPressEvent(event);

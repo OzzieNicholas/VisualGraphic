@@ -1,20 +1,20 @@
 /*
- * TriMeshRenderer.h：三角网格渲染器
+ * QuadMeshRenderer.h：四边形网格渲染器
  *
  * 功能概述：
- *  - 将 TriMesh 顶点/索引数据上传到 GPU
- *  - 绑定并配置 VAO/VBO/EBO
- *  - 使用指定着色器程序进行渲染
+ *  - 将 QuadMesh 顶点与索引数据上传到 GPU
+ *  - 管理 VAO/VBO/EBO 缓冲对象
+ *  - 使用指定着色器进行四边形图元绘制
  *
  * 使用场景：
- *  - 渲染法线线段、坐标轴、路径折线等辅助图元
- *  - 可视化几何边界、调试结构分析
- *  - 图形系统中非面状图元的快速渲染
+ *  - 渲染平面结构（如地面、墙体、立方体面）
+ *  - 可视化基于四边面的建模结果
+ *  - 几何离散网格、纹理贴图面等图形结构展示
  */
 
 #pragma once
 
-#include "../Geometry/TriMesh.h"
+#include "../Geometry/QuadMesh.h"
 
 #include <QOpenGLBuffer>
 #include <QOpenGLContext>
@@ -22,17 +22,17 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 
-class TriMeshRenderer {
+class QuadMeshRenderer {
 public:
     // ========== 构造与析构 ========== //
 
-    TriMeshRenderer();
-    ~TriMeshRenderer();
+    QuadMeshRenderer();
+    ~QuadMeshRenderer();
 
     // ========== 数据上传与渲染 ========== //
 
     // 设置网格
-    void setMesh(const TriMesh& mesh);
+    void setMesh(const QuadMesh& mesh);
 
     // 绘制网格
     void renderMesh(QOpenGLShaderProgram* program);
@@ -44,5 +44,5 @@ private:
 
     int m_meshIndexCount = 0;             // 索引数
     bool m_meshInitialized = false;       // 是否已初始化
-    GLenum m_meshDrawMode = GL_TRIANGLES; // 图元类型
+    GLenum m_meshDrawMode = GL_QUADS;     // 图元类型
 };

@@ -2,15 +2,14 @@
  * Mesh.h：网格基类接口定义（抽象基类）
  *
  * 功能概述：
- *  - 提供所有网格类型（如 TriMesh、LineMesh、QuadMesh 等）的统一抽象接口
- *  - 包含顶点、索引、图元类型、动画状态等通用数据成员
- *  - 提供几何访问、变换、判定、导出等接口
- *  - 子类需实现核心纯虚函数，支持自定义构造与渲染
+ *  - 定义所有网格类型（如 TriMesh、LineMesh、QuadMesh 等）的通用接口
+ *  - 提供顶点/索引管理、图元类型设置、动画控制、几何属性判定等基础功能
+ *  - 包含变换、采样、导入导出等高级几何操作接口，支持派生类定制
  *
  * 使用场景：
- *  - 几何数据建模（Geometry 模块）
- *  - OpenGL 渲染上传（Renderer 模块）
- *  - 支持拓展到曲线、曲面等类型
+ *  - 几何数据建模模块中的核心结构
+ *  - OpenGL 渲染上传模块的数据源
+ *  - 各种图形构造与演示的通用接口基础
  */
 
 #pragma once
@@ -101,9 +100,7 @@ public:
     // ======== 导出功能 ======== //
 
     // 导出为 SVG 路径
-    virtual std::string exportToSvgPath() const {
-        return {};
-    }
+    virtual std::string exportToSvgPath() const;
 
     // 导出为 JSON 字符串
     virtual std::string exportToJson() const;
@@ -112,8 +109,8 @@ public:
     virtual void importFromJson(const std::string&);
 
 protected:
-    std::vector<MeshVertex> vertices;       // 顶点数组
-    std::vector<uint> indices;              // 索引数组
-    DrawPrimitiveType drawPrimitiveType;    // 图元类型
-    float animationStep = 0.0f;             // 动画参数（用于插值演示等）
+    std::vector<MeshVertex> m_vertices;       // 顶点数组
+    std::vector<uint> m_indices;              // 索引数组
+    DrawPrimitiveType m_drawPrimitiveType;    // 图元类型
+    float m_animationStep = 0.0f;             // 动画参数（用于插值演示等）
 };

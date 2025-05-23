@@ -104,11 +104,14 @@
     <ResourceCompile Include="resource\VisualGraphic.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Geometry\QuadMeshBuilder.cpp" />
     <ClCompile Include="include\Renderer\TriMeshRenderer.h" />
     <ClCompile Include="src\Geometry\LineMesh.cpp" />
     <ClCompile Include="src\Geometry\LineMeshBuilder.cpp" />
     <ClCompile Include="src\Geometry\Mesh.cpp" />
     <ClCompile Include="src\Geometry\QuadMesh.cpp" />
+    <ClCompile Include="src\Renderer\LineMeshRenderer.cpp" />
+    <ClCompile Include="src\Renderer\QuadMeshRenderer.cpp" />
     <ClCompile Include="src\Utils\UtilsMath.cpp" />
     <ClCompile Include="src\Utils\UtilsMesh.cpp" />
     <ClCompile Include="src\Utils\UtilsOpenGL.cpp" />
@@ -123,8 +126,11 @@
     <ClInclude Include="include\Geometry\LineMeshBuilder.h" />
     <ClInclude Include="include\Geometry\Mesh.h" />
     <ClInclude Include="include\Geometry\QuadMesh.h" />
+    <ClInclude Include="include\Geometry\QuadMeshBuilder.h" />
     <ClInclude Include="include\Geometry\TriMesh.h" />
     <ClInclude Include="include\Geometry\TriMeshBuilder.h" />
+    <ClInclude Include="include\Renderer\LineMeshRenderer.h" />
+    <ClInclude Include="include\Renderer\QuadMeshRenderer.h" />
     <ClInclude Include="include\Utils\UtilsMath.h" />
     <ClInclude Include="include\Utils\UtilsMesh.h" />
     <ClInclude Include="include\Utils\UtilsOpenGL.h" />

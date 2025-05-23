@@ -1,13 +1,34 @@
-#pragma once
-#include "./TriMesh.h"
+/*
+ * TriMeshBuilder.h：三角网格构造器
+ *
+ * 功能概述：
+ *  - 提供一组静态函数，用于生成各种标准三角形网格几何体
+ *  - 所有构造结果均为 TriMesh 类型
+ *
+ * 使用场景：
+ *  - 网格建模与渲染初始化
+ *  - 三维坐标场景搭建（如地面、箭头、辅助图元）
+ */
 
-class TriMesh;
+#pragma once
+
+#include <cmath>
+#include "./TriMesh.h"
 
 class TriMeshBuilder {
 public:
-    static TriMesh createGrid(uint rows, uint cols, float size);
-    static TriMesh createAxisLines(float length); // 创建三维空间的坐标轴（仅线段）
-    static TriMesh createGroundPlane(float size, uint resolution); // 创建Z=0灰色地面（方形网格面）
-    static TriMesh createAxisArrow(float radius, float height, int segments); // 创建简单箭头（用小圆锥）
-	static TriMesh createPolyline(const std::vector<QVector3D>& points, const QVector3D& color); // 创建折线
+    // 构建规则网格（XY平面）
+    static TriMesh buildGridMesh(uint rows, uint cols, float size);
+
+    // 构建地面网格（Z=0平面）
+    static TriMesh buildGroundPlaneMesh(float size, uint resolution);
+
+    // 构建坐标轴末端箭头
+    static TriMesh buildArrowMesh(float radius, float height, int segments);
+
+	// 构建立方体网格
+    static TriMesh buildCubeMesh();
+
+	// 构建球体网格
+	static TriMesh buildSphereMesh(uint stacks, uint slices);
 };

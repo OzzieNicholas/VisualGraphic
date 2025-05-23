@@ -1,20 +1,20 @@
 /*
- * TriMeshRenderer.h：三角网格渲染器
+ * LineMeshRenderer.h：线段网格渲染器
  *
  * 功能概述：
- *  - 将 TriMesh 顶点/索引数据上传到 GPU
- *  - 绑定并配置 VAO/VBO/EBO
- *  - 使用指定着色器程序进行渲染
+ *  - 将 LineMesh 中的顶点和索引数据上传至 GPU
+ *  - 管理 OpenGL 缓冲对象（VAO/VBO/EBO）
+ *  - 使用指定着色器绘制线段图元
  *
  * 使用场景：
- *  - 渲染法线线段、坐标轴、路径折线等辅助图元
- *  - 可视化几何边界、调试结构分析
- *  - 图形系统中非面状图元的快速渲染
+ *  - 渲染三角网格模型
+ *  - 展示曲面建模、光照、纹理效果等可视化结果
+ *  - 图形学教学与算法演示平台中的三角形图元渲染任务
  */
 
 #pragma once
 
-#include "../Geometry/TriMesh.h"
+#include "../Geometry/LineMesh.h"
 
 #include <QOpenGLBuffer>
 #include <QOpenGLContext>
@@ -22,19 +22,19 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 
-class TriMeshRenderer {
+class LineMeshRenderer {
 public:
     // ========== 构造与析构 ========== //
 
-    TriMeshRenderer();
-    ~TriMeshRenderer();
+    LineMeshRenderer();
+    ~LineMeshRenderer();
 
     // ========== 数据上传与渲染 ========== //
 
-    // 设置网格
-    void setMesh(const TriMesh& mesh);
+    // 设置线段网格
+    void setMesh(const LineMesh& mesh);
 
-    // 绘制网格
+    // 绘制线段网格
     void renderMesh(QOpenGLShaderProgram* program);
 
 private:
@@ -44,5 +44,5 @@ private:
 
     int m_meshIndexCount = 0;             // 索引数
     bool m_meshInitialized = false;       // 是否已初始化
-    GLenum m_meshDrawMode = GL_TRIANGLES; // 图元类型
+    GLenum m_meshDrawMode = GL_LINES;     // 图元类型
 };

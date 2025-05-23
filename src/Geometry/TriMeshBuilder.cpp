@@ -1,6 +1,7 @@
 #include "../../include/Geometry/TriMeshBuilder.h"
 
-TriMesh TriMeshBuilder::createGrid(uint rows, uint cols, float size) {
+// 构建规则网格（XY 平面）
+TriMesh TriMeshBuilder::buildGridMesh(uint rows, uint cols, float size) {
     TriMesh mesh;
 
     float half = size * 0.5f;
@@ -15,7 +16,7 @@ TriMesh TriMeshBuilder::createGrid(uint rows, uint cols, float size) {
             vertices.push_back({
                 QVector3D(x, y, 0.0f),
                 QVector3D(0, 0, 1),
-                QVector3D(0.8f, 0.2f, 0.2f)
+                QVector3D(0.8f, 0.8f, 0.8f)
             });
         }
     }
@@ -27,76 +28,26 @@ TriMesh TriMeshBuilder::createGrid(uint rows, uint cols, float size) {
             uint i1 = i0 + 1;
             uint i2 = i0 + cols;
             uint i3 = i2 + 1;
-            indices.insert(indices.end(), { i0, i2, i1, i1, i2, i3 });
+            indices.insert(
+                indices.end(),
+                { i0, i2, i1, i1, i2, i3 }
+            );
         }
     }
 
     mesh.setVertices(vertices);
     mesh.setIndices(indices);
-
+    mesh.setDrawType(DrawPrimitiveType::Triangles);
     return mesh;
 }
 
-TriMesh TriMeshBuilder::createAxisLines(float length) {
-    TriMesh mesh;
-
-    std::vector<MeshVertex> vertices = {
-        {{0, 0, 0}, {}, {1, 0, 0}}, {{length, 0, 0}, {}, {1, 0, 0}}, // X - 红
-        {{0, 0, 0}, {}, {0, 1, 0}}, {{0, length, 0}, {}, {0, 1, 0}}, // Y - 绿
-        {{0, 0, 0}, {}, {0, 0, 1}}, {{0, 0, length}, {}, {0, 0, 1}}  // Z - 蓝
-    };
-
-    std::vector<uint> indices = { 0, 1, 2, 3, 4, 5 };
-
-    DrawPrimitiveType drawPrimitiveType = DrawPrimitiveType::Lines;
-
-    mesh.setVertices(vertices);
-    mesh.setIndices(indices);
-    mesh.setDrawType(drawPrimitiveType);
-    
-    return mesh;
+// 构建地面网格（Z=0平面）
+TriMesh TriMeshBuilder::buildGroundPlaneMesh(float size, uint resolution) {
+    return buildGridMesh(resolution, resolution, size);
 }
 
-TriMesh TriMeshBuilder::createGroundPlane(float size, uint resolution) {
-    TriMesh mesh;
-
-    uint rows = resolution;
-    uint cols = resolution;
-    float half = size * 0.5f;
-    float dx = size / (cols - 1);
-    float dy = size / (rows - 1);
-
-    std::vector<MeshVertex> vertices;
-    for (uint r = 0; r < rows; ++r) {
-        for (uint c = 0; c < cols; ++c) {
-            float x = -half + c * dx;
-            float y = -half + r * dy;
-            vertices.push_back({
-                QVector3D(x, y, 0.0f),
-                QVector3D(0, 0, 1),
-                QVector3D(0.6f, 0.6f, 0.6f)
-            });
-        }
-    }
-
-    std::vector<uint> indices;
-    for (uint r = 0; r < rows - 1; ++r) {
-        for (uint c = 0; c < cols - 1; ++c) {
-            uint i0 = r * cols + c;
-            uint i1 = i0 + 1;
-            uint i2 = i0 + cols;
-            uint i3 = i2 + 1;
-            indices.insert(indices.end(), { i0, i2, i1, i1, i2, i3 });
-        }
-    }
-
-    mesh.setVertices(vertices);
-    mesh.setIndices(indices);
-
-    return mesh;
-}
-
-TriMesh TriMeshBuilder::createAxisArrow(float radius, float height, int segments) {
+// 构建坐标轴末端箭头
+TriMesh TriMeshBuilder::buildArrowMesh(float radius, float height, int segments) {
     TriMesh mesh;
     QVector3D tip(0, 0, height);
 
@@ -121,29 +72,109 @@ TriMesh TriMeshBuilder::createAxisArrow(float radius, float height, int segments
 
     mesh.setVertices(vertices);
     mesh.setIndices(indices);
-
+    mesh.setDrawType(DrawPrimitiveType::Triangles);
     return mesh;
 }
 
-TriMesh TriMeshBuilder::createPolyline(const std::vector<QVector3D>& points, const QVector3D& color) {
-	TriMesh mesh;
+// 构建立方体网格
+TriMesh TriMeshBuilder::buildCubeMesh() {
+    TriMesh mesh;
+
+    const QVector3D normals[] = {
+        { 0,  0,  1}, { 0,  0, -1},
+        {-1,  0,  0}, { 1,  0,  0},
+        { 0,  1,  0}, { 0, -1,  0}
+    };
+
+    const QVector3D colors[] = {
+        {1, 0, 0}, {0, 1, 0},
+        {0, 0, 1}, {1, 1, 0},
+        {1, 0, 1}, {0, 1, 1}
+    };
+
+    const QVector3D positions[] = {
+        // 前 (+Z)
+        {-0.5, -0.5,  0.5}, { 0.5, -0.5,  0.5}, { 0.5,  0.5,  0.5}, {-0.5,  0.5,  0.5},
+        // 后(-Z)
+        { 0.5, -0.5, -0.5}, {-0.5, -0.5, -0.5}, {-0.5,  0.5, -0.5}, { 0.5,  0.5, -0.5},
+        // 左 (-X)
+        {-0.5, -0.5, -0.5}, {-0.5, -0.5,  0.5}, {-0.5,  0.5,  0.5}, {-0.5,  0.5, -0.5},
+        // 右 (+X)
+        { 0.5, -0.5,  0.5}, { 0.5, -0.5, -0.5}, { 0.5,  0.5, -0.5}, { 0.5,  0.5,  0.5},
+        // 上 (+Y)
+        {-0.5,  0.5,  0.5}, { 0.5,  0.5,  0.5}, { 0.5,  0.5, -0.5}, {-0.5,  0.5, -0.5},
+        // 下 (-Y)
+        {-0.5, -0.5, -0.5}, { 0.5, -0.5, -0.5}, { 0.5, -0.5,  0.5}, {-0.5, -0.5,  0.5}
+    };
 
     std::vector<MeshVertex> vertices;
-	for (const auto& point : points) {
-		vertices.push_back({ point, {}, color });
-	}
-    
+    for (int i = 0; i < 6; ++i) {
+        int base = i * 4;
+        for (int j = 0; j < 4; ++j) {
+            vertices.push_back({
+                positions[base + j],
+                normals[i],
+                colors[i]
+            });
+        }
+    }
+
     std::vector<uint> indices;
-	for (uint i = 0; i < points.size() - 1; ++i) {
-        indices.push_back(i);
-        indices.push_back(i + 1);
-	}
-    
-    DrawPrimitiveType drawPrimitiveType = DrawPrimitiveType::Lines;
+    for (uint i = 0; i < 6; ++i) {
+        uint base = i * 4;
+        indices.insert(indices.end(), {
+            base, base + 1, base + 2,
+            base, base + 2, base + 3
+        });
+    }
 
     mesh.setVertices(vertices);
     mesh.setIndices(indices);
-    mesh.setDrawType(drawPrimitiveType);
+    mesh.setDrawType(DrawPrimitiveType::Triangles);
+    return mesh;
+}
 
-	return mesh;
+// 构建球体网格
+TriMesh TriMeshBuilder::buildSphereMesh(uint stacks, uint slices) {
+    TriMesh mesh;
+    std::vector<MeshVertex> vertices;
+    std::vector<uint> indices;
+
+    for (uint i = 0; i <= stacks; ++i) {
+        float v = float(i) / stacks;
+        float phi = v * M_PI;
+
+        for (uint j = 0; j <= slices; ++j) {
+            float u = float(j) / slices;
+            float theta = u * 2.0f * M_PI;
+
+            float x = std::sin(phi) * std::cos(theta);
+            float y = std::cos(phi);
+            float z = std::sin(phi) * std::sin(theta);
+
+            QVector3D pos(x, y, z);
+            vertices.push_back({
+                pos,
+                pos.normalized(), // 法线即为位置方向
+                {1.0f - u, v, u} // 颜色按经纬度渐变
+            });
+        }
+    }
+
+    for (uint i = 0; i < stacks; ++i) {
+        for (uint j = 0; j < slices; ++j) {
+            uint row1 = i * (slices + 1);
+            uint row2 = (i + 1) * (slices + 1);
+
+            indices.insert(indices.end(), {
+                row1 + j, row2 + j, row2 + j + 1,
+                row1 + j, row2 + j + 1, row1 + j + 1
+            });
+        }
+    }
+
+    mesh.setVertices(vertices);
+    mesh.setIndices(indices);
+    mesh.setDrawType(DrawPrimitiveType::Triangles);
+    return mesh;
 }
