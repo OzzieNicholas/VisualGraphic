@@ -22,6 +22,9 @@
 #include "../Renderer/MeshTriRenderer.h"
 #include "../Renderer/MeshLineRenderer.h"
 
+#include "../Interaction/InteractorManager.h"
+#include "../Interaction/InteractorHost.h"
+
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <QOpenGLShaderProgram>
@@ -29,7 +32,7 @@
 #include <QWheelEvent>
 #include <QKeyEvent>
 
-class SceneViewport : public QOpenGLWidget, protected QOpenGLFunctions {
+class SceneViewport : public QOpenGLWidget, public InteractorHost, protected QOpenGLFunctions {
     Q_OBJECT
 
 public:
@@ -37,6 +40,22 @@ public:
 
     explicit SceneViewport(QWidget* parent = nullptr);
     ~SceneViewport();
+
+    // ========== 渲染辅助接口 ========== //
+
+    // 设置折线网格（供交互器使用）
+    void setPolylineMesh(const MeshLine& mesh);
+
+    // 清除折线数据
+    void clearPolyline();
+
+    // ========== InteractorHost 接口实现 ========== //
+
+    QMatrix4x4 getViewMatrix() const override;
+    QMatrix4x4 getProjectionMatrix() const override;
+    QSize getViewportSize() const override;
+    void requestViewportUpdate() override;
+    float getCameraZoom() const override;
 
 protected:
     // ========== Qt 事件重载 ========== //
@@ -72,18 +91,12 @@ private:
     float m_panY = 0.0f;        // 垂直平移量
     QPoint m_lastMousePos;      // 上一次鼠标位置
 
-    // ========== 交互状态 ========== //
+    // ========== 控制器 ========== //
 
-    std::vector<QVector3D> m_polylinePoints; // 点击添加的折线点
+    InteractorManager* m_interactorManager = nullptr;
 
-    // ========== 内部辅助 ========== //
+    // ========== 内部辅助（保留测试阶段，后续交互器替代） ========== //
 
-	// 将屏幕坐标转换为世界坐标
-    QVector3D mapClickToPlane(float screenX, float screenY);
+    QVector3D mapClickToPlane(float screenX, float screenY);  // 可迁至 InteractorUtils
 
-	// 更新折线网格
-    void updatePolylineMesh();
-
-	// 清除折线网格
-    void clearPolyline();
 };
