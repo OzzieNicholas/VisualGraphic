@@ -1,8 +1,8 @@
-#include "../../include/Geometry/TriMeshBuilder.h"
+#include "../../include/Geometry/MeshTriBuilder.h"
 
 // 构建规则网格（XY 平面）
-TriMesh TriMeshBuilder::buildGridMesh(uint rows, uint cols, float size) {
-    TriMesh mesh;
+MeshTri MeshTriBuilder::buildGridMesh(uint rows, uint cols, float size) {
+    MeshTri mesh;
 
     float half = size * 0.5f;
     float dx = size / (cols - 1);
@@ -42,13 +42,13 @@ TriMesh TriMeshBuilder::buildGridMesh(uint rows, uint cols, float size) {
 }
 
 // 构建地面网格（Z=0平面）
-TriMesh TriMeshBuilder::buildGroundPlaneMesh(float size, uint resolution) {
+MeshTri MeshTriBuilder::buildGroundPlaneMesh(float size, uint resolution) {
     return buildGridMesh(resolution, resolution, size);
 }
 
 // 构建坐标轴末端箭头
-TriMesh TriMeshBuilder::buildArrowMesh(float radius, float height, int segments) {
-    TriMesh mesh;
+MeshTri MeshTriBuilder::buildArrowMesh(float radius, float height, int segments) {
+    MeshTri mesh;
     QVector3D tip(0, 0, height);
 
     std::vector<MeshVertex> vertices;
@@ -77,8 +77,8 @@ TriMesh TriMeshBuilder::buildArrowMesh(float radius, float height, int segments)
 }
 
 // 构建立方体网格
-TriMesh TriMeshBuilder::buildCubeMesh() {
-    TriMesh mesh;
+MeshTri MeshTriBuilder::buildCubeMesh() {
+    MeshTri mesh;
 
     const QVector3D normals[] = {
         { 0,  0,  1}, { 0,  0, -1},
@@ -135,8 +135,8 @@ TriMesh TriMeshBuilder::buildCubeMesh() {
 }
 
 // 构建球体网格
-TriMesh TriMeshBuilder::buildSphereMesh(uint stacks, uint slices) {
-    TriMesh mesh;
+MeshTri MeshTriBuilder::buildSphereMesh(uint stacks, uint slices) {
+    MeshTri mesh;
     std::vector<MeshVertex> vertices;
     std::vector<uint> indices;
 

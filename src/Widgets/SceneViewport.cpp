@@ -29,11 +29,11 @@ void SceneViewport::initializeGL() {
     }
 
     // 构建地面网格并上传
-    m_groundMesh = TriMeshBuilder::buildGroundPlaneMesh(40.0f, 100);
+    m_groundMesh = MeshTriBuilder::buildGroundPlaneMesh(40.0f, 100);
     m_groundRenderer.setMesh(m_groundMesh);
 
-    // 构建坐标轴（使用 LineMesh）
-    m_axisLineMesh = LineMeshBuilder::buildAxisLines(5.0f);
+    // 构建坐标轴（使用 MeshLine）
+    m_axisLineMesh = MeshLineBuilder::buildAxisLines(5.0f);
     m_axisRenderer.setMesh(m_axisLineMesh);
 
     // 初始化空折线
@@ -97,7 +97,7 @@ void SceneViewport::mousePressEvent(QMouseEvent* event) {
         m_polylinePoints.push_back(worldCoord);
 
         // 更新折线网格
-        m_polylineMesh = LineMeshBuilder::buildPolylineMesh(m_polylinePoints, QVector3D(1.0f, 0.0f, 0.0f));
+        m_polylineMesh = MeshLineBuilder::buildPolylineMesh(m_polylinePoints, QVector3D(1.0f, 0.0f, 0.0f));
         m_polylineRenderer.setMesh(m_polylineMesh);
 
         // 请求重绘

@@ -1,8 +1,8 @@
-#include "../../include/Geometry/LineMeshBuilder.h"
+#include "../../include/Geometry/MeshLineBuilder.h"
 
 // 构建三维坐标轴线（X/Y/Z 红绿蓝）
-LineMesh LineMeshBuilder::buildAxisLines(float length) {
-    LineMesh mesh;
+MeshLine MeshLineBuilder::buildAxisLines(float length) {
+    MeshLine mesh;
 
     std::vector<MeshVertex> vertices = {
         { QVector3D(0.0f, 0.0f, 0.0f), {}, QVector3D(1.0f, 0.0f, 0.0f) },
@@ -24,8 +24,8 @@ LineMesh LineMeshBuilder::buildAxisLines(float length) {
 }
 
 // 构建折线（连接给定点集）
-LineMesh LineMeshBuilder::buildPolylineMesh(const std::vector<QVector3D>& points, const QVector3D& color) {
-    LineMesh mesh;
+MeshLine MeshLineBuilder::buildPolylineMesh(const std::vector<QVector3D>& points, const QVector3D& color) {
+    MeshLine mesh;
 
     std::vector<MeshVertex> vertices;
     for (const auto& point : points) {
@@ -45,8 +45,8 @@ LineMesh LineMeshBuilder::buildPolylineMesh(const std::vector<QVector3D>& points
 }
 
 // 构建法线线段（从三角网格法线生成）
-LineMesh LineMeshBuilder::buildNormalLinesFromTriMesh(const TriMesh& mesh, float scale) {
-    LineMesh normalLines;
+MeshLine MeshLineBuilder::buildNormalLinesFromTriMesh(const MeshTri& mesh, float scale) {
+    MeshLine normalLines;
 
     const auto& vertices = mesh.getVertices();
 

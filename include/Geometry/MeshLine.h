@@ -1,5 +1,5 @@
 /*
- * LineMesh.h：线段网格类（Mesh 派生类）
+ * MeshLine.h：线段网格类（Mesh 派生类）
  *
  * 功能概述：
  *  - 表示由线段图元构成的轻量网格
@@ -15,12 +15,12 @@
 
 #include "./Mesh.h"
 
-class LineMesh : public Mesh {
+class MeshLine : public Mesh {
 public:
     // ========== 构造与析构 ========== //
 
-    LineMesh();
-    ~LineMesh();
+    MeshLine();
+    ~MeshLine();
 
     // ========== 数据设置与获取 ========== //
 

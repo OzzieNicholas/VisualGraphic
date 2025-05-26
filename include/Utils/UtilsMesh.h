@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Geometry/TriMesh.h"
+#include "../Geometry/MeshTri.h"
 
 #include<QMatrix4x4>
 

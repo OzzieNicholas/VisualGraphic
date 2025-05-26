@@ -1,8 +1,8 @@
 /*
- * TriMeshRenderer.h：三角网格渲染器
+ * MeshTriRenderer.h：三角网格渲染器
  *
  * 功能概述：
- *  - 将 TriMesh 顶点/索引数据上传到 GPU
+ *  - 将 MeshTri 顶点/索引数据上传到 GPU
  *  - 绑定并配置 VAO/VBO/EBO
  *  - 使用指定着色器程序进行渲染
  *
@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "../Geometry/TriMesh.h"
+#include "../Geometry/MeshTri.h"
 
 #include <QOpenGLBuffer>
 #include <QOpenGLContext>
@@ -22,17 +22,17 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 
-class TriMeshRenderer {
+class MeshTriRenderer {
 public:
     // ========== 构造与析构 ========== //
 
-    TriMeshRenderer();
-    ~TriMeshRenderer();
+    MeshTriRenderer();
+    ~MeshTriRenderer();
 
     // ========== 数据上传与渲染 ========== //
 
     // 设置网格
-    void setMesh(const TriMesh& mesh);
+    void setMesh(const MeshTri& mesh);
 
     // 绘制网格
     void renderMesh(QOpenGLShaderProgram* program);

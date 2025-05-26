@@ -1,43 +1,43 @@
-#include "../../include/Geometry/LineMesh.h"
+#include "../../include/Geometry/MeshLine.h"
 
 // ========== 构造与析构 ========== //
 
-LineMesh::LineMesh() {
+MeshLine::MeshLine() {
     this->m_drawPrimitiveType = DrawPrimitiveType::Lines;
 }
 
-LineMesh::~LineMesh() {
+MeshLine::~MeshLine() {
 
 }
 
 // ========== 数据设置与获取 ========== //
 
 // 设置顶点数组
-void LineMesh::setVertices(const std::vector<MeshVertex>& vertices) {
+void MeshLine::setVertices(const std::vector<MeshVertex>& vertices) {
     this->m_vertices = vertices;
 }
 
 // 设置索引数组
-void LineMesh::setIndices(const std::vector<uint>& indices) {
+void MeshLine::setIndices(const std::vector<uint>& indices) {
     this->m_indices = indices;
 }
 
 // 设置图元类型
-void LineMesh::setDrawType(DrawPrimitiveType drawType) {
+void MeshLine::setDrawType(DrawPrimitiveType drawType) {
     this->m_drawPrimitiveType = drawType;
 }
 
 // ========== 几何变换与采样 ========== //
 
 // 应用变换矩阵到所有顶点
-void LineMesh::applyTransform(const QMatrix4x4& matrix) {
+void MeshLine::applyTransform(const QMatrix4x4& matrix) {
     for (auto& vertex : m_vertices) {
         vertex.position = matrix.map(vertex.position);
     }
 }
 
 // 对曲面采样点
-std::vector<QVector3D> LineMesh::samplePoints(int count) const {
+std::vector<QVector3D> MeshLine::samplePoints(int count) const {
     std::vector<QVector3D> points;
 
     if (m_indices.size() < 2 || m_vertices.empty()) {
@@ -61,11 +61,11 @@ std::vector<QVector3D> LineMesh::samplePoints(int count) const {
 // ========== 导出导入功能 ========== //
 
 // 导出为 JSON 字符串
-std::string LineMesh::exportToJson() const {
+std::string MeshLine::exportToJson() const {
     return "{}";
 }
 
 // 从 JSON 字符串导入
-void LineMesh::importFromJson(const std::string& json) {
+void MeshLine::importFromJson(const std::string& json) {
     
 }

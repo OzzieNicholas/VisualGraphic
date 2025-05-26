@@ -1,8 +1,8 @@
-#include "../../include/Geometry/QuadMeshBuilder.h"
+#include "../../include/Geometry/MeshQuadBuilder.h"
 
 // 构建规则四边形网格（XY 平面）
-QuadMesh QuadMeshBuilder::buildGridMesh(uint rows, uint cols, float size) {
-    QuadMesh mesh;
+MeshQuad MeshQuadBuilder::buildGridMesh(uint rows, uint cols, float size) {
+    MeshQuad mesh;
 
     float half = size * 0.5f;
     float dx = size / (cols - 1);
@@ -39,13 +39,13 @@ QuadMesh QuadMeshBuilder::buildGridMesh(uint rows, uint cols, float size) {
 }
 
 // 构建地面平面网格（灰色 Z=0 面）
-QuadMesh QuadMeshBuilder::buildGroundPlaneMesh(float size, uint resolution) {
+MeshQuad MeshQuadBuilder::buildGroundPlaneMesh(float size, uint resolution) {
     return buildGridMesh(resolution, resolution, size);
 }
 
 // 构建面向 Z 轴的四边形面板
-QuadMesh QuadMeshBuilder::buildZFacingQuad(float width, float height) {
-    QuadMesh mesh;
+MeshQuad MeshQuadBuilder::buildZFacingQuad(float width, float height) {
+    MeshQuad mesh;
 
     float w = width * 0.5f;
     float h = height * 0.5f;
@@ -66,8 +66,8 @@ QuadMesh QuadMeshBuilder::buildZFacingQuad(float width, float height) {
 }
 
 // 构建立方体六个面（每面一个四边形）
-QuadMesh QuadMeshBuilder::buildCubeFaceMesh() {
-    QuadMesh mesh;
+MeshQuad MeshQuadBuilder::buildCubeFaceMesh() {
+    MeshQuad mesh;
     std::vector<MeshVertex> vertices;
     std::vector<uint> indices;
 

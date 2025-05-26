@@ -1,20 +1,20 @@
 /*
- * LineMeshRenderer.h：线段网格渲染器
+ * MeshQuadRenderer.h：四边形网格渲染器
  *
  * 功能概述：
- *  - 将 LineMesh 中的顶点和索引数据上传至 GPU
- *  - 管理 OpenGL 缓冲对象（VAO/VBO/EBO）
- *  - 使用指定着色器绘制线段图元
+ *  - 将 MeshQuad 顶点与索引数据上传到 GPU
+ *  - 管理 VAO/VBO/EBO 缓冲对象
+ *  - 使用指定着色器进行四边形图元绘制
  *
  * 使用场景：
- *  - 渲染三角网格模型
- *  - 展示曲面建模、光照、纹理效果等可视化结果
- *  - 图形学教学与算法演示平台中的三角形图元渲染任务
+ *  - 渲染平面结构（如地面、墙体、立方体面）
+ *  - 可视化基于四边面的建模结果
+ *  - 几何离散网格、纹理贴图面等图形结构展示
  */
 
 #pragma once
 
-#include "../Geometry/LineMesh.h"
+#include "../Geometry/MeshQuad.h"
 
 #include <QOpenGLBuffer>
 #include <QOpenGLContext>
@@ -22,19 +22,19 @@
 #include <QOpenGLShaderProgram>
 #include <QOpenGLVertexArrayObject>
 
-class LineMeshRenderer {
+class MeshQuadRenderer {
 public:
     // ========== 构造与析构 ========== //
 
-    LineMeshRenderer();
-    ~LineMeshRenderer();
+    MeshQuadRenderer();
+    ~MeshQuadRenderer();
 
     // ========== 数据上传与渲染 ========== //
 
-    // 设置线段网格
-    void setMesh(const LineMesh& mesh);
+    // 设置网格
+    void setMesh(const MeshQuad& mesh);
 
-    // 绘制线段网格
+    // 绘制网格
     void renderMesh(QOpenGLShaderProgram* program);
 
 private:
@@ -44,5 +44,5 @@ private:
 
     int m_meshIndexCount = 0;             // 索引数
     bool m_meshInitialized = false;       // 是否已初始化
-    GLenum m_meshDrawMode = GL_LINES;     // 图元类型
+    GLenum m_meshDrawMode = GL_QUADS;     // 图元类型
 };

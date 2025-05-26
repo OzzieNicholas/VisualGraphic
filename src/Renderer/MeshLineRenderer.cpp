@@ -1,13 +1,13 @@
-#include "../../include/Renderer/LineMeshRenderer.h"
+#include "../../include/Renderer/MeshLineRenderer.h"
 
 // ========== 构造与析构 ========== //
 
-LineMeshRenderer::LineMeshRenderer()
+MeshLineRenderer::MeshLineRenderer()
     : m_meshVBO(QOpenGLBuffer::VertexBuffer),
     m_meshEBO(QOpenGLBuffer::IndexBuffer) {
 }
 
-LineMeshRenderer::~LineMeshRenderer() {
+MeshLineRenderer::~MeshLineRenderer() {
     m_meshVAO.destroy();
     m_meshVBO.destroy();
     m_meshEBO.destroy();
@@ -16,7 +16,7 @@ LineMeshRenderer::~LineMeshRenderer() {
 // ========== 数据上传与渲染 ========== //
 
 // 设置线段网格
-void LineMeshRenderer::setMesh(const LineMesh& mesh) {
+void MeshLineRenderer::setMesh(const MeshLine& mesh) {
     if (!m_meshInitialized) {
         m_meshVAO.create();
         m_meshVBO.create();
@@ -48,7 +48,7 @@ void LineMeshRenderer::setMesh(const LineMesh& mesh) {
 }
 
 // 绘制线段网格
-void LineMeshRenderer::renderMesh(QOpenGLShaderProgram* program) {
+void MeshLineRenderer::renderMesh(QOpenGLShaderProgram* program) {
     if (!m_meshInitialized || m_meshIndexCount == 0) {
         return;
     }

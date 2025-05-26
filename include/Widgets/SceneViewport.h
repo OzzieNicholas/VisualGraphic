@@ -14,13 +14,13 @@
 
 #pragma once
 
-#include "../Geometry/TriMesh.h"
-#include "../Geometry/LineMesh.h"
-#include "../Geometry/TriMeshBuilder.h"
-#include "../Geometry/LineMeshBuilder.h"
+#include "../Geometry/MeshTri.h"
+#include "../Geometry/MeshLine.h"
+#include "../Geometry/MeshTriBuilder.h"
+#include "../Geometry/MeshLineBuilder.h"
 
-#include "../Renderer/TriMeshRenderer.h"
-#include "../Renderer/LineMeshRenderer.h"
+#include "../Renderer/MeshTriRenderer.h"
+#include "../Renderer/MeshLineRenderer.h"
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
@@ -53,13 +53,13 @@ protected:
 private:
     // ========== 渲染资源 ========== //
 
-    TriMesh m_groundMesh; // 地面网格
-    LineMesh m_polylineMesh; // 折线构成的三角线段
-    LineMesh m_axisLineMesh; // 坐标轴线段
+    MeshTri m_groundMesh; // 地面网格
+    MeshLine m_polylineMesh; // 折线构成的三角线段
+    MeshLine m_axisLineMesh; // 坐标轴线段
 
-    TriMeshRenderer m_groundRenderer;   // 地面网格渲染器
-    LineMeshRenderer m_polylineRenderer; // 折线网格渲染器
-    LineMeshRenderer m_axisRenderer;    // 坐标轴渲染器
+    MeshTriRenderer m_groundRenderer;   // 地面网格渲染器
+    MeshLineRenderer m_polylineRenderer; // 折线网格渲染器
+    MeshLineRenderer m_axisRenderer;    // 坐标轴渲染器
 
     QOpenGLShaderProgram* m_shaderProgram = nullptr; // 着色器
 
