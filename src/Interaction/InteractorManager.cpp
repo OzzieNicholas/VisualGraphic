@@ -2,10 +2,6 @@
 #include "../../include/Interaction/InteractorBase.h"
 #include "../../include/Interaction/InteractorHost.h"
 
-/*
- * InteractorManager：交互控制器实现
- */
-
 InteractorManager::InteractorManager() = default;
 
 InteractorManager::~InteractorManager() = default;
@@ -18,7 +14,7 @@ std::shared_ptr<InteractorBase> InteractorManager::getActiveInteractor() const {
     return m_activeInteractor;
 }
 
-void InteractorManager::clearInteractor() {
+void InteractorManager::clearActiveInteractor() {
     m_activeInteractor.reset();
 }
 
@@ -44,4 +40,9 @@ void InteractorManager::onKeyPress(QKeyEvent* event, InteractorHost* host) {
     if (m_activeInteractor) {
         m_activeInteractor->onKeyPress(event, host);
     }
+}
+
+// 判断是否存在交互器
+bool InteractorManager::hasActiveInteractor() const {
+    return static_cast<bool>(m_activeInteractor);
 }

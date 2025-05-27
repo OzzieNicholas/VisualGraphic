@@ -9,7 +9,7 @@
  * 使用场景：
  *  - InteractionManager 的事件委托对象
  *  - 派生类实现特定交互行为（如视角控制、构造点、编辑几何等）
- *  - 与 SceneViewport 协同响应用户输入操作
+ *  - 与 InteractorHost 接口协同响应用户输入操作
  */
 
 #pragma once
@@ -18,26 +18,17 @@
 #include <QWheelEvent>
 #include <QKeyEvent>
 
-class SceneViewport;
+class InteractorHost;
 
-// ========== 交互行为基类接口 ========== //
 class InteractorBase {
 public:
     virtual ~InteractorBase();
 
-    // ========== 鼠标事件接口 ========== //
+    // ========== 鼠标事件 ========== //
+    virtual void onMousePress(QMouseEvent* event, InteractorHost* host) = 0;
+    virtual void onMouseMove(QMouseEvent* event, InteractorHost* host) = 0;
+    virtual void onWheel(QWheelEvent* event, InteractorHost* host) = 0;
 
-    // 鼠标按下
-    virtual void onMousePress(QMouseEvent* event, SceneViewport* viewport) = 0;
-
-    // 鼠标移动
-    virtual void onMouseMove(QMouseEvent* event, SceneViewport* viewport) = 0;
-
-    // 鼠标滚轮
-    virtual void onWheel(QWheelEvent* event, SceneViewport* viewport) = 0;
-
-    // ========== 键盘事件接口 ========== //
-
-    // 键盘按下
-    virtual void onKeyPress(QKeyEvent* event, SceneViewport* viewport) = 0;
+    // ========== 键盘事件 ========== //
+    virtual void onKeyPress(QKeyEvent* event, InteractorHost* host) = 0;
 };

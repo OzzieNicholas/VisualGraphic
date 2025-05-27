@@ -15,13 +15,13 @@
 
 #include <memory>
 
-class InteractorBase;
 class QMouseEvent;
 class QWheelEvent;
 class QKeyEvent;
-class InteractorHost; // 抽象控件接口
 
-// ========== 交互控制器类定义 ========== //
+class InteractorBase;
+class InteractorHost;
+
 class InteractorManager {
 public:
     InteractorManager();
@@ -43,15 +43,26 @@ public:
 
     // ========== 交互器管理 ========== //
 
-    // 设置当前激活交互器
+    // 设置交互器
     void setActiveInteractor(std::shared_ptr<InteractorBase> interactor);
 
-    // 获取当前激活交互器
+    // 获取交互器
     std::shared_ptr<InteractorBase> getActiveInteractor() const;
 
-    // 清除当前交互器
-    void clearInteractor();
+    // 判断是否存在交互器
+    bool hasActiveInteractor() const;
+
+    // 重置交互器
+    template<typename T>
+    void resetIf() {
+        if (std::dynamic_pointer_cast<T>(m_activeInteractor)) {
+            m_activeInteractor.reset();
+        }
+    }
+
+    // 清除交互器
+    void clearActiveInteractor();
 
 private:
-    std::shared_ptr<InteractorBase> m_activeInteractor; // 当前激活交互器
+    std::shared_ptr<InteractorBase> m_activeInteractor; // 交互器
 };
