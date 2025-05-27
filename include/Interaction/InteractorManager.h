@@ -27,18 +27,11 @@ public:
     InteractorManager();
     ~InteractorManager();
 
-    // ========== 事件转发 ========== //
+    // ========== 鼠标键盘事件 ========== //
 
-    // 鼠标按下
     void onMousePress(QMouseEvent* event, InteractorHost* host);
-
-    // 鼠标移动
     void onMouseMove(QMouseEvent* event, InteractorHost* host);
-
-    // 滚轮滚动
     void onWheel(QWheelEvent* event, InteractorHost* host);
-
-    // 键盘按键
     void onKeyPress(QKeyEvent* event, InteractorHost* host);
 
     // ========== 交互器管理 ========== //

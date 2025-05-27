@@ -20,12 +20,10 @@ public:
     InteractorView();
     ~InteractorView() override;
 
-    // 鼠标事件
+    // ========== 鼠标键盘事件 ========== //
     void onMousePress(QMouseEvent* event, InteractorHost* host) override;
     void onMouseMove(QMouseEvent* event, InteractorHost* host) override;
     void onWheel(QWheelEvent* event, InteractorHost* host) override;
-
-    // 键盘事件
     void onKeyPress(QKeyEvent* event, InteractorHost* host) override;
 
 private:

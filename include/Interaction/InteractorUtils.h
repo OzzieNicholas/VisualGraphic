@@ -16,15 +16,25 @@
 #include <QVector3D>
 #include <QMatrix4x4>
 #include <QSize>
-#include <limits>
 
 namespace InteractorUtils {
-    // 点击转换为平面世界坐标
+    // 点转换为平面世界坐标
     QVector3D mapClickToPlane(
         float screenX,
         float screenY,
         const QMatrix4x4& projection,
         const QMatrix4x4& view,
         const QSize& viewportSize
+    );
+
+    // 从点集中找出与点击位置最近的点索引（若超出容差则返回 -1）
+    int findClosestPointIndex(
+        float screenX,
+        float screenY,
+        const std::vector<QVector3D>& worldPoints,
+        const QMatrix4x4& projection,
+        const QMatrix4x4& view,
+        const QSize& viewportSize,
+        float maxPixelRadius = 8.0f
     );
 }

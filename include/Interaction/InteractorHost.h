@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include "../Geometry/MeshLine.h"
 #include <QMatrix4x4>
 #include <QSize>
 
@@ -21,7 +22,7 @@ class InteractorHost {
 public:
     virtual ~InteractorHost() = default;
 
-    // ========== 控件基础 ========== //
+    // ========== 控件操作 ========== //
 
     // 获取视图矩阵
     virtual QMatrix4x4 getViewMatrix() const = 0;
@@ -29,13 +30,13 @@ public:
     // 获取投影矩阵
     virtual QMatrix4x4 getProjectionMatrix() const = 0;
 
-    // 获取控件尺寸（像素）
+    // 获取控件尺寸
     virtual QSize getViewportSize() const = 0;
 
-    // 请求控件更新（重绘）
+    // 请求控件更新
     virtual void requestViewportUpdate() = 0;
 
-    // 获取相机距离（可用于深度调整）
+    // 获取相机距离
     virtual float getCameraZoom() const = 0;
 
     // ========== 视角操作 ========== //
@@ -48,4 +49,12 @@ public:
 
     // 缩放视角（通过相机距离控制）
     virtual void zoomView(float zoomDelta) = 0;
+
+    // ========== 预览折线 ========== //
+
+    // 设置折线
+    virtual void setPolylineMesh(const MeshLine& mesh) = 0;
+
+    // 清除折线
+    virtual void clearPolyline() = 0;
 };

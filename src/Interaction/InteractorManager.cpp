@@ -6,17 +6,7 @@ InteractorManager::InteractorManager() = default;
 
 InteractorManager::~InteractorManager() = default;
 
-void InteractorManager::setActiveInteractor(std::shared_ptr<InteractorBase> interactor) {
-    m_activeInteractor = interactor;
-}
-
-std::shared_ptr<InteractorBase> InteractorManager::getActiveInteractor() const {
-    return m_activeInteractor;
-}
-
-void InteractorManager::clearActiveInteractor() {
-    m_activeInteractor.reset();
-}
+// ========== 鼠标键盘事件 ========== //
 
 void InteractorManager::onMousePress(QMouseEvent* event, InteractorHost* host) {
     if (m_activeInteractor) {
@@ -42,7 +32,25 @@ void InteractorManager::onKeyPress(QKeyEvent* event, InteractorHost* host) {
     }
 }
 
+// ========== 交互器管理 ========== //
+
+// 设置交互器
+void InteractorManager::setActiveInteractor(std::shared_ptr<InteractorBase> interactor) {
+    m_activeInteractor = interactor;
+}
+
+// 获取交互器
+std::shared_ptr<InteractorBase> InteractorManager::getActiveInteractor() const {
+    return m_activeInteractor;
+}
+
 // 判断是否存在交互器
 bool InteractorManager::hasActiveInteractor() const {
     return static_cast<bool>(m_activeInteractor);
 }
+
+// 清除交互器
+void InteractorManager::clearActiveInteractor() {
+    m_activeInteractor.reset();
+}
+

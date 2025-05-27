@@ -56,6 +56,9 @@ public:
     QSize getViewportSize() const override;
     void requestViewportUpdate() override;
     float getCameraZoom() const override;
+    void rotateView(float deltaX, float deltaY) override;
+    void panView(float offsetX, float offsetY) override;
+    void zoomView(float zoomDelta) override;
 
 protected:
     // ========== Qt 事件重载 ========== //
@@ -93,10 +96,5 @@ private:
 
     // ========== 控制器 ========== //
 
-    InteractorManager* m_interactorManager = nullptr;
-
-    // ========== 内部辅助（保留测试阶段，后续交互器替代） ========== //
-
-    QVector3D mapClickToPlane(float screenX, float screenY);  // 可迁至 InteractorUtils
-
+    std::unique_ptr<InteractorManager> m_interactorManager;
 };

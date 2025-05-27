@@ -9,7 +9,7 @@
  * 使用场景：
  *  - InteractionManager 的事件委托对象
  *  - 派生类实现特定交互行为（如视角控制、构造点、编辑几何等）
- *  - 与 InteractorHost 接口协同响应用户输入操作
+ *  - 与 InteractorHost 接口协同响应用户操作
  */
 
 #pragma once
@@ -24,11 +24,9 @@ class InteractorBase {
 public:
     virtual ~InteractorBase();
 
-    // ========== 鼠标事件 ========== //
+    // ========== 鼠标键盘事件 ========== //
     virtual void onMousePress(QMouseEvent* event, InteractorHost* host) = 0;
     virtual void onMouseMove(QMouseEvent* event, InteractorHost* host) = 0;
     virtual void onWheel(QWheelEvent* event, InteractorHost* host) = 0;
-
-    // ========== 键盘事件 ========== //
     virtual void onKeyPress(QKeyEvent* event, InteractorHost* host) = 0;
 };

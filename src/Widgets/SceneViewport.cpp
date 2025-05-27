@@ -13,7 +13,6 @@ SceneViewport::SceneViewport(QWidget* parent)
 SceneViewport::~SceneViewport() {
     makeCurrent();
     delete m_shaderProgram;
-    delete m_interactorManager;
     doneCurrent();
 }
 
@@ -96,7 +95,7 @@ void SceneViewport::keyPressEvent(QKeyEvent* event) {
     }
 }
 
-// ========== 渲染与状态接口 ========== //
+// ========== InteractorHost 接口 ========== //
 
 QMatrix4x4 SceneViewport::getViewMatrix() const {
     QMatrix4x4 view;
@@ -124,7 +123,26 @@ float SceneViewport::getCameraZoom() const {
     return m_zoom;
 }
 
-// ========== 折线更新接口 ========== //
+void SceneViewport::rotateView(float deltaX, float deltaY) {
+    m_rotationX += deltaY;
+    m_rotationY += deltaX;
+    update();
+}
+
+void SceneViewport::panView(float offsetX, float offsetY) {
+    m_panX += offsetX;
+    m_panY += offsetY;
+    update();
+}
+
+void SceneViewport::zoomView(float zoomDelta) {
+    m_zoom += zoomDelta;
+    if (m_zoom < 2.0f) m_zoom = 2.0f;
+    if (m_zoom > 100.0f) m_zoom = 100.0f;
+    update();
+}
+
+// ========== 渲染辅助 ========== //
 
 void SceneViewport::setPolylineMesh(const MeshLine& mesh) {
     m_polylineMesh = mesh;
@@ -136,45 +154,4 @@ void SceneViewport::clearPolyline() {
     m_polylineMesh.clearGeometryData();
     m_polylineRenderer.setMesh(m_polylineMesh);
     update();
-}
-
-// ========== 可迁移辅助函数 ========== //
-
-QVector3D SceneViewport::mapClickToPlane(float screenX, float screenY) {
-    // 屏幕坐标 → NDC
-    float ndcX = (2.0f * screenX) / width() - 1.0f;
-    float ndcY = 1.0f - (2.0f * screenY) / height();
-
-    // 构造与 paintGL 一致的投影视图矩阵
-    QMatrix4x4 projection;
-    projection.perspective(45.0f, width() / float(height()), 0.1f, 100.0f);
-    QMatrix4x4 view;
-    view.translate(m_panX, m_panY, -m_zoom);
-    view.rotate(m_rotationX, 1.0f, 0.0f);
-    view.rotate(m_rotationY, 0.0f, 1.0f);
-    QMatrix4x4 invPV = (projection * view).inverted();
-
-    // 将 NDC 转换为世界坐标
-    QVector4D nearPointNDC(ndcX, ndcY, -1.0f, 1.0f); // 近平面
-    QVector4D farPointNDC(ndcX, ndcY, 1.0f, 1.0f);   // 远平面
-    QVector4D nearWorld = invPV * nearPointNDC;
-    QVector4D farWorld = invPV * farPointNDC;
-    nearWorld /= nearWorld.w();
-    farWorld /= farWorld.w();
-    QVector3D rayOrigin = nearWorld.toVector3D();
-    QVector3D rayDir = (farWorld - nearWorld).toVector3D().normalized();
-
-    // 与 Z=0 平面求交
-    if (qAbs(rayDir.z()) < 1e-6f) {
-        // 射线与平面平行
-        return QVector3D(
-            std::numeric_limits<float>::quiet_NaN(),
-            std::numeric_limits<float>::quiet_NaN(),
-            std::numeric_limits<float>::quiet_NaN()
-        );
-    }
-
-    float t = -rayOrigin.z() / rayDir.z();
-    QVector3D intersection = rayOrigin + t * rayDir;
-    return intersection;
 }
